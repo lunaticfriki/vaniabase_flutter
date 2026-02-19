@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Brand Colors
-  static const Color _violet = Color.fromARGB(255, 55, 19, 95);
+  static const Color _violet = Color.fromARGB(255, 77, 19, 95);
   static const Color _lima = Color.fromARGB(255, 105, 230, 3);
   static const Color _yellow = Color.fromARGB(255, 255, 238, 7);
 
@@ -13,6 +14,7 @@ class AppTheme {
   static final ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
+    fontFamily: GoogleFonts.inconsolata().fontFamily,
     colorScheme: ColorScheme.fromSeed(
       seedColor: _violet,
       brightness: Brightness.light,
@@ -32,6 +34,7 @@ class AppTheme {
   static final ThemeData darkTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
+    fontFamily: GoogleFonts.inconsolata().fontFamily,
     colorScheme: ColorScheme.fromSeed(
       seedColor: _violet,
       brightness: Brightness.dark,
