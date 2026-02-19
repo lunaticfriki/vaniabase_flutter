@@ -1,8 +1,7 @@
-import 'package:vaniabase/infrastructure/data_sources/seed_items_data_source.dart';
-
 import '../../domain/entities/item.dart';
 import '../../domain/entities/item_failure.dart';
 import '../../domain/repositories/i_items_repository.dart';
+import '../data_sources/seed_items_data_source.dart';
 
 class ItemsRepositoryImpl implements IItemsRepository {
   final IItemsDataSource _dataSource;

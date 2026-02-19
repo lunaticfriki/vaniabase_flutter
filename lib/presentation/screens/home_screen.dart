@@ -40,24 +40,25 @@ class _HomeViewState extends State<_HomeView> {
       drawer: const MainDrawer(),
       body: BlocBuilder<ItemsCubit, ItemsState>(
         builder: (context, state) {
-          if (state is ItemsInitial) {
-            return const Center(child: Text('Press refresh or load items.'));
-          } else if (state is ItemsLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is ItemsLoaded) {
-            if (state.items.isEmpty) {
-              return const Center(child: Text('No items found.'));
-            }
-            return ListView.builder(
-              itemCount: state.items.length,
+          return switch (state) {
+            ItemsInitial() => const Center(
+              child: Text('Press refresh or load items.'),
+            ),
+            ItemsLoading() => const Center(child: CircularProgressIndicator()),
+            ItemsLoaded(items: final items) when items.isEmpty => const Center(
+              child: Text('No items found.'),
+            ),
+            ItemsLoaded(items: final items) => ListView.builder(
+              itemCount: items.length,
               itemBuilder: (context, index) {
-                return ItemPreviewWidget(item: state.items[index]);
+                return ItemPreviewWidget(item: items[index]);
               },
-            );
-          } else if (state is ItemsError) {
-            return Center(child: Text('Error: ${state.message}'));
-          }
-          return const Center(child: Text('Unknown state'));
+            ),
+            ItemsError(message: final message) => Center(
+              child: Text('Error: $message'),
+            ),
+            _ => const Center(child: Text('Unknown error')),
+          };
         },
       ),
     );
