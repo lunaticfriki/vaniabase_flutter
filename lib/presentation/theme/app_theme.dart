@@ -5,33 +5,11 @@ class AppTheme {
   // Brand Colors
   static const Color _violet = Color.fromARGB(255, 77, 19, 95);
   static const Color _lima = Color.fromARGB(255, 105, 230, 3);
-  static const Color _yellow = Color.fromARGB(255, 255, 189, 7);
+  static const Color _yellow = Color.fromARGB(255, 240, 165, 25);
 
   // Background Colors
   static const Color _darkBackground = Color(0xFF1E1E1E);
-  static const Color _lightBackground = Colors.white;
-
-  static final ThemeData lightTheme = ThemeData(
-    useMaterial3: true,
-    brightness: Brightness.light,
-    fontFamily: GoogleFonts.inconsolata().fontFamily,
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: _violet,
-      brightness: Brightness.light,
-      primary: _violet,
-      secondary: _lima,
-      tertiary: _yellow,
-      surface: _lightBackground,
-    ),
-    scaffoldBackgroundColor: _lightBackground,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: _violet,
-      foregroundColor: Colors.white,
-      centerTitle: true,
-    ),
-  );
-
-  static final ThemeData darkTheme = ThemeData(
+  static final ThemeData themeData = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
     fontFamily: GoogleFonts.inconsolata().fontFamily,
@@ -41,8 +19,7 @@ class AppTheme {
       primary: _violet,
       secondary: _lima,
       tertiary: _yellow,
-      surface:
-          _darkBackground, // For cards/bottom sheets to blend or slightly distinct
+      surface: _darkBackground,
     ),
     scaffoldBackgroundColor: _darkBackground,
     appBarTheme: const AppBarTheme(

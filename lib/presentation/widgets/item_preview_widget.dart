@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/item.dart';
+import 'cyberpunk_styling.dart';
 
 class ItemPreviewWidget extends StatelessWidget {
   final Item item;
@@ -8,13 +9,29 @@ class ItemPreviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
+    final theme = Theme.of(context);
+    const textColor = Colors.white;
+
+    return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: CyberpunkStyling.getVolumeDecoration(
+        context,
+        bgColor: theme.colorScheme.primary,
+      ),
       child: ListTile(
+        textColor: textColor,
         leading: _buildCover(),
-        title: Text(item.title.value),
-        subtitle: Text(item.author.value),
+        title: Text(
+          item.title.value,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: theme.colorScheme.secondary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        subtitle: Text(
+          item.author.value,
+          style: theme.textTheme.bodyMedium?.copyWith(color: textColor),
+        ),
       ),
     );
   }
@@ -25,7 +42,7 @@ class ItemPreviewWidget extends StatelessWidget {
     }
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(4),
+      borderRadius: CyberpunkStyling.imageClipRadius,
       child: Image.network(
         item.cover.value,
         width: 50,
