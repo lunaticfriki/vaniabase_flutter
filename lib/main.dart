@@ -3,7 +3,11 @@ import 'presentation/router/app_router.dart';
 import 'presentation/theme/theme_controller.dart';
 import 'presentation/theme/app_theme.dart';
 
-void main() {
+import 'config/injection.dart' as di;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await di.init();
   runApp(const MainApp());
 }
 

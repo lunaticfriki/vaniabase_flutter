@@ -1,0 +1,446 @@
+[
+  {
+    "id": "item-1",
+    "title": "Inception",
+    "author": "Christopher Nolan",
+    "publisher": "Warner Bros",
+    "tags": [
+      "sci-fi",
+      "thriller",
+      "action"
+    ],
+    "topic": "Dreams",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/inception/400/600",
+    "description": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.",
+    "year": 2010,
+    "format": "Blu-ray",
+    "reference": "V-001",
+    "category": {
+      "id": "cat-video",
+      "name": "video"
+    },
+    "completed": true
+  },
+  {
+    "id": "item-2",
+    "title": "The Matrix",
+    "author": "The Wachowskis",
+    "publisher": "Warner Bros",
+    "tags": [
+      "sci-fi",
+      "action"
+    ],
+    "topic": "Virtual Reality",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/matrix/400/600",
+    "description": "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
+    "year": 1999,
+    "format": "DVD",
+    "reference": "V-002",
+    "category": {
+      "id": "cat-video",
+      "name": "video"
+    },
+    "completed": false
+  },
+  {
+    "id": "item-3",
+    "title": "Interstellar",
+    "author": "Christopher Nolan",
+    "publisher": "Paramount Pictures",
+    "tags": [
+      "sci-fi",
+      "drama",
+      "space"
+    ],
+    "topic": "Space Exploration",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/interstellar/400/600",
+    "description": "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+    "year": 2014,
+    "format": "Digital",
+    "reference": "V-003",
+    "category": {
+      "id": "cat-video",
+      "name": "video"
+    },
+    "completed": false
+  },
+  {
+    "id": "item-4",
+    "title": "Persona 5 Royal",
+    "author": "P-Studio",
+    "publisher": "Atlus",
+    "tags": [
+      "rpg",
+      "jrpg"
+    ],
+    "topic": "Phantom Thieves",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/persona5/400/600",
+    "description": "A group of high school students awaken their Persona abilities and form the Phantom Thieves of Hearts.",
+    "year": 2019,
+    "format": "Digital",
+    "reference": "VG-001",
+    "category": {
+      "id": "cat-videogames",
+      "name": "videogames"
+    },
+    "completed": true
+  },
+  {
+    "id": "item-5",
+    "title": "The Legend of Zelda: Breath of the Wild",
+    "author": "Nintendo EPD",
+    "publisher": "Nintendo",
+    "tags": [
+      "action-adventure",
+      "open-world"
+    ],
+    "topic": "Fantasy",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/zelda/400/600",
+    "description": "After a 100-year slumber, Link wakes up alone in a world he no longer remembers.",
+    "year": 2017,
+    "format": "Physical",
+    "reference": "VG-002",
+    "category": {
+      "id": "cat-videogames",
+      "name": "videogames"
+    },
+    "completed": true
+  },
+  {
+    "id": "item-6",
+    "title": "Shadow of the Colossus",
+    "author": "Team Ico",
+    "publisher": "Sony Computer Entertainment",
+    "tags": [
+      "action-adventure",
+      "puzzle"
+    ],
+    "topic": "Colossi",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/colossus/400/600",
+    "description": "A young man must defeat sixteen massive beings known as colossi in order to restore the life of a girl.",
+    "year": 2005,
+    "format": "Digital",
+    "reference": "VG-003",
+    "category": {
+      "id": "cat-videogames",
+      "name": "videogames"
+    },
+    "completed": false
+  },
+  {
+    "id": "item-7",
+    "title": "Hollow Knight",
+    "author": "Team Cherry",
+    "publisher": "Team Cherry",
+    "tags": [
+      "metroidvania",
+      "action-adventure"
+    ],
+    "topic": "Bugs",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/hollowknight/400/600",
+    "description": "Explore a vast ruined kingdom of insects and heroes.",
+    "year": 2017,
+    "format": "Digital",
+    "reference": "VG-004",
+    "category": {
+      "id": "cat-videogames",
+      "name": "videogames"
+    },
+    "completed": false
+  },
+  {
+    "id": "item-8",
+    "title": "Dune",
+    "author": "Frank Herbert",
+    "publisher": "Chilton Books",
+    "tags": [
+      "sci-fi",
+      "classic"
+    ],
+    "topic": "Arrakis",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/dune/400/600",
+    "description": "Set on the desert planet Arrakis, Dune is the story of the boy Paul Atreides.",
+    "year": 1965,
+    "format": "Hardcover",
+    "reference": "B-001",
+    "category": {
+      "id": "cat-books",
+      "name": "books"
+    },
+    "completed": true
+  },
+  {
+    "id": "item-9",
+    "title": "1984",
+    "author": "George Orwell",
+    "publisher": "Secker & Warburg",
+    "tags": [
+      "dystopian",
+      "political fiction"
+    ],
+    "topic": "Totalitarianism",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/1984/400/600",
+    "description": "Among the seminal texts of the 20th century, Nineteen Eighty-Four is a rare work that grows more haunting as its futuristic purgatory becomes more real.",
+    "year": 1949,
+    "format": "Paperback",
+    "reference": "B-002",
+    "category": {
+      "id": "cat-books",
+      "name": "books"
+    },
+    "completed": true
+  },
+  {
+    "id": "item-10",
+    "title": "Neuromancer",
+    "author": "William Gibson",
+    "publisher": "Ace Books",
+    "tags": [
+      "cyberpunk",
+      "sci-fi"
+    ],
+    "topic": "Cyberspace",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/neuromancer/400/600",
+    "description": "The Matrix is a world within the world, a global consensus-hallucination, the representation of every byte of data in cyberspace.",
+    "year": 1984,
+    "format": "Paperback",
+    "reference": "B-003",
+    "category": {
+      "id": "cat-books",
+      "name": "books"
+    },
+    "completed": false
+  },
+  {
+    "id": "item-11",
+    "title": "The Dark Side of the Moon",
+    "author": "Pink Floyd",
+    "publisher": "Harvest",
+    "tags": [
+      "progressive rock",
+      "psychedelic rock"
+    ],
+    "topic": "Rock",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/darkside/400/600",
+    "description": "The eighth studio album by the English rock band Pink Floyd.",
+    "year": 1973,
+    "format": "Vinyl",
+    "reference": "M-001",
+    "category": {
+      "id": "cat-music",
+      "name": "music"
+    },
+    "completed": true
+  },
+  {
+    "id": "item-12",
+    "title": "Random Access Memories",
+    "author": "Daft Punk",
+    "publisher": "Columbia",
+    "tags": [
+      "electronic",
+      "disco",
+      "pop"
+    ],
+    "topic": "Electronic",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/ram/400/600",
+    "description": "The fourth and final studio album by French electronic music duo Daft Punk.",
+    "year": 2013,
+    "format": "CD",
+    "reference": "M-002",
+    "category": {
+      "id": "cat-music",
+      "name": "music"
+    },
+    "completed": true
+  },
+  {
+    "id": "item-13",
+    "title": "OK Computer",
+    "author": "Radiohead",
+    "publisher": "Parlophone",
+    "tags": [
+      "alternative rock",
+      "art rock"
+    ],
+    "topic": "Rock",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/okcomputer/400/600",
+    "description": "The third studio album by English rock band Radiohead.",
+    "year": 1997,
+    "format": "Digital",
+    "reference": "M-003",
+    "category": {
+      "id": "cat-music",
+      "name": "music"
+    },
+    "completed": false
+  },
+  {
+    "id": "item-14",
+    "title": "Demon Days",
+    "author": "Gorillaz",
+    "publisher": "Parlophone",
+    "tags": [
+      "alternative hip hop",
+      "art pop"
+    ],
+    "topic": "Pop",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/demondays/400/600",
+    "description": "The second studio album by British virtual band Gorillaz.",
+    "year": 2005,
+    "format": "CD",
+    "reference": "M-004",
+    "category": {
+      "id": "cat-music",
+      "name": "music"
+    },
+    "completed": true
+  },
+  {
+    "id": "item-15",
+    "title": "Watchmen",
+    "author": "Alan Moore, Dave Gibbons",
+    "publisher": "DC Comics",
+    "tags": [
+      "superhero",
+      "drama",
+      "mystery"
+    ],
+    "topic": "Superheroes",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/watchmen/400/600",
+    "description": "A team of former superhero vigilantes reunite to uncover a conspiracy following the murder of one of their own.",
+    "year": 1986,
+    "format": "Graphic Novel",
+    "reference": "C-001",
+    "category": {
+      "id": "cat-comics",
+      "name": "comics"
+    },
+    "completed": true
+  },
+  {
+    "id": "item-16",
+    "title": "Akira",
+    "author": "Katsuhiro Otomo",
+    "publisher": "Kodansha",
+    "tags": [
+      "cyberpunk",
+      "sci-fi"
+    ],
+    "topic": "Neo-Tokyo",
+    "language": "Japanese",
+    "cover": "https://picsum.photos/seed/akira/400/600",
+    "description": "A cyberpunk manga set in a post-apocalyptic Neo-Tokyo.",
+    "year": 1982,
+    "format": "Tankōbon",
+    "reference": "C-002",
+    "category": {
+      "id": "cat-comics",
+      "name": "comics"
+    },
+    "completed": false
+  },
+  {
+    "id": "item-17",
+    "title": "Sandman: Preludes & Nocturnes",
+    "author": "Neil Gaiman",
+    "publisher": "Vertigo",
+    "tags": [
+      "fantasy",
+      "horror"
+    ],
+    "topic": "The Endless",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/sandman/400/600",
+    "description": "The first volume of the Sandman comic series written by Neil Gaiman.",
+    "year": 1988,
+    "format": "Graphic Novel",
+    "reference": "C-003",
+    "category": {
+      "id": "cat-comics",
+      "name": "comics"
+    },
+    "completed": false
+  },
+  {
+    "id": "item-18",
+    "title": "National Geographic: The Photographs",
+    "author": "Leah Bendavid-Val",
+    "publisher": "National Geographic",
+    "tags": [
+      "photography",
+      "nature"
+    ],
+    "topic": "Photography",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/natgeo/400/600",
+    "description": "A collection of some of the most famous and breathtaking photographs from National Geographic.",
+    "year": 1994,
+    "format": "Magazine",
+    "reference": "MG-001",
+    "category": {
+      "id": "cat-magazines",
+      "name": "magazines"
+    },
+    "completed": true
+  },
+  {
+    "id": "item-19",
+    "title": "Wired: Issue 30.12",
+    "author": "Wired Staff",
+    "publisher": "Condé Nast",
+    "tags": [
+      "technology",
+      "culture"
+    ],
+    "topic": "Technology",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/wired/400/600",
+    "description": "An issue focusing on the latest in generative AI and cultural shifts in technology.",
+    "year": 2022,
+    "format": "Magazine",
+    "reference": "MG-002",
+    "category": {
+      "id": "cat-magazines",
+      "name": "magazines"
+    },
+    "completed": false
+  },
+  {
+    "id": "item-20",
+    "title": "Edge Issue 380",
+    "author": "Edge Staff",
+    "publisher": "Future Publishing",
+    "tags": [
+      "gaming",
+      "industry"
+    ],
+    "topic": "Video Games",
+    "language": "English",
+    "cover": "https://picsum.photos/seed/edge/400/600",
+    "description": "The definitive guide to the video game industry, reviews, and features.",
+    "year": 2023,
+    "format": "Magazine",
+    "reference": "MG-003",
+    "category": {
+      "id": "cat-magazines",
+      "name": "magazines"
+    },
+    "completed": true
+  }
+]

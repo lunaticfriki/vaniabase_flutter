@@ -1,3 +1,4 @@
+import '../value_objects/completed.dart';
 import '../value_objects/string_value_objects.dart';
 import '../value_objects/unique_id.dart';
 import '../value_objects/year.dart';
@@ -18,6 +19,7 @@ class Item {
   final Format format;
   final Reference reference;
   final Category category;
+  final Completed completed;
 
   const Item._({
     required this.id,
@@ -33,6 +35,7 @@ class Item {
     required this.format,
     required this.reference,
     required this.category,
+    required this.completed,
   });
 
   static Item create({
@@ -48,6 +51,7 @@ class Item {
     required Format format,
     required Reference reference,
     required Category category,
+    required Completed completed,
     UniqueId? id,
   }) {
     return Item._(
@@ -64,6 +68,29 @@ class Item {
       format: format,
       reference: reference,
       category: category,
+      completed: completed,
+    );
+  }
+
+  static Item fromJson(dynamic json) {
+    return Item.create(
+      id: UniqueId.fromUniqueString(json['id']),
+      title: Title(json['title']),
+      author: Author(json['author']),
+      publisher: Publisher(json['publisher']),
+      tags: List<String>.from(json['tags']),
+      topic: Topic(json['topic']),
+      language: Language(json['language']),
+      cover: Cover(json['cover']),
+      description: Description(json['description']),
+      year: Year(json['year']),
+      format: Format(json['format']),
+      reference: Reference(json['reference']),
+      category: Category.create(
+        id: UniqueId.fromUniqueString(json['category']['id']),
+        name: Name(json['category']['name']),
+      ),
+      completed: Completed(json['completed'] ?? false),
     );
   }
 
@@ -82,6 +109,7 @@ class Item {
       format: const Format(''),
       reference: const Reference(''),
       category: Category.empty(),
+      completed: const Completed(false),
     );
   }
 }

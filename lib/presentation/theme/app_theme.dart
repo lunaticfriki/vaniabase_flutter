@@ -5,7 +5,7 @@ class AppTheme {
   // Brand Colors
   static const Color _violet = Color.fromARGB(255, 77, 19, 95);
   static const Color _lima = Color.fromARGB(255, 105, 230, 3);
-  static const Color _yellow = Color.fromARGB(255, 255, 238, 7);
+  static const Color _yellow = Color.fromARGB(255, 255, 189, 7);
 
   // Background Colors
   static const Color _darkBackground = Color(0xFF1E1E1E);

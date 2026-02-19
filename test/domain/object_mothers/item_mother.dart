@@ -1,5 +1,6 @@
 import 'package:vaniabase/domain/entities/item.dart';
 import 'package:vaniabase/domain/entities/category.dart';
+import 'package:vaniabase/domain/value_objects/completed.dart';
 import 'package:vaniabase/domain/value_objects/string_value_objects.dart';
 import 'package:vaniabase/domain/value_objects/unique_id.dart';
 import 'package:vaniabase/domain/value_objects/year.dart';
@@ -21,6 +22,7 @@ class ItemMother {
       format: const Format('Hardcover'),
       reference: const Reference('REF-123'),
       category: CategoryMother.test(),
+      completed: const Completed(false),
     );
   }
 
@@ -38,6 +40,7 @@ class ItemMother {
       format: const Format('Hardcover'),
       reference: const Reference('REF-123'),
       category: category,
+      completed: const Completed(false),
     );
   }
 
@@ -55,6 +58,7 @@ class ItemMother {
     Format? format,
     Reference? reference,
     Category? category,
+    Completed? completed,
   }) {
     return Item.create(
       id: id ?? UniqueId.fromUniqueString('item-id'),
@@ -70,6 +74,7 @@ class ItemMother {
       format: format ?? const Format('Hardcover'),
       reference: reference ?? const Reference('REF-123'),
       category: category ?? CategoryMother.test(),
+      completed: completed ?? const Completed(false),
     );
   }
 }
