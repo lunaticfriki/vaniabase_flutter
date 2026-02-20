@@ -46,8 +46,7 @@ class ItemsReadService implements IItemsReadService {
     } else if (newItems != null) {
       final hasReachedMax = newItems.isEmpty || newItems.length < _limit;
       _cubit.updateItems(
-        refresh ? newItems : List.of(currentItems)
-          ..addAll(newItems),
+        refresh ? newItems : (List.of(currentItems)..addAll(newItems)),
         hasReachedMax: hasReachedMax,
       );
     } else {
