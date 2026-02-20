@@ -4,39 +4,38 @@ import '../../application/services/items_cubit.dart';
 import '../../application/services/items_state.dart';
 import '../../application/services/items_read_service.dart';
 import '../../config/injection.dart';
-import '../widgets/item_preview_widget.dart';
 import '../widgets/main_drawer.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class TagsScreen extends StatelessWidget {
+  const TagsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: sl<ItemsCubit>(),
-      child: const _HomeView(),
+      child: const _TagsView(),
     );
   }
 }
 
-class _HomeView extends StatefulWidget {
-  const _HomeView();
+class _TagsView extends StatefulWidget {
+  const _TagsView();
 
   @override
-  State<_HomeView> createState() => _HomeViewState();
+  State<_TagsView> createState() => _TagsViewState();
 }
 
-class _HomeViewState extends State<_HomeView> {
+class _TagsViewState extends State<_TagsView> {
   @override
   void initState() {
     super.initState();
-    sl<IItemsReadService>().fetchLatestItems();
+    sl<IItemsReadService>().fetchTags();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Latest Additions')),
+      appBar: AppBar(title: const Text('Tags')),
       drawer: const MainDrawer(),
       body: BlocBuilder<ItemsCubit, ItemsState>(
         builder: (context, state) {
@@ -48,13 +47,14 @@ class _HomeViewState extends State<_HomeView> {
               child: Text('Error: ${state.errorMessage}'),
             ),
             ItemsStatus.success =>
-              state.latestItems.isEmpty
-                  ? const Center(child: Text('No items found.'))
+              state.tags.isEmpty
+                  ? const Center(child: Text('No tags found.'))
                   : ListView.builder(
-                      itemCount: state.latestItems.length,
+                      itemCount: state.tags.length,
                       itemBuilder: (context, index) {
-                        return ItemPreviewWidget(
-                          item: state.latestItems[index],
+                        return ListTile(
+                          leading: const Icon(Icons.tag),
+                          title: Text(state.tags[index]),
                         );
                       },
                     ),

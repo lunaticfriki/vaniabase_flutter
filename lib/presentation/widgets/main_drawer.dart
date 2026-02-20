@@ -38,51 +38,69 @@ class MainDrawer extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 4.0,
-                ),
-                child: Container(
-                  decoration: CyberpunkStyling.getVolumeDecoration(
-                    context,
-                    bgColor: tileColor,
-                  ),
-                  child: ListTile(
-                    shape: CyberpunkStyling.cutEdgeBorder,
-                    textColor: textColor,
-                    iconColor: textColor,
-                    leading: const Icon(Icons.home),
-                    title: const Text('Home'),
-                    onTap: () {
-                      context.pop(); // Close the drawer
-                      context.go('/');
-                    },
-                  ),
-                ),
+              _buildDrawerItem(
+                context,
+                Icons.home,
+                'Home',
+                '/',
+                tileColor,
+                textColor,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 8.0,
-                  vertical: 4.0,
-                ),
-                child: Container(
-                  decoration: CyberpunkStyling.getVolumeDecoration(
-                    context,
-                    bgColor: tileColor,
-                  ),
-                  child: ListTile(
-                    shape: CyberpunkStyling.cutEdgeBorder,
-                    textColor: textColor,
-                    iconColor: textColor,
-                    leading: const Icon(Icons.info),
-                    title: const Text('About'),
-                    onTap: () {
-                      context.pop(); // Close the drawer
-                      context.go('/about');
-                    },
-                  ),
-                ),
+              _buildDrawerItem(
+                context,
+                Icons.list,
+                'All Items',
+                '/all-items',
+                tileColor,
+                textColor,
+              ),
+              _buildDrawerItem(
+                context,
+                Icons.search,
+                'Search',
+                '/search',
+                tileColor,
+                textColor,
+              ),
+              _buildDrawerItem(
+                context,
+                Icons.category,
+                'Categories',
+                '/categories',
+                tileColor,
+                textColor,
+              ),
+              _buildDrawerItem(
+                context,
+                Icons.person,
+                'Authors',
+                '/authors',
+                tileColor,
+                textColor,
+              ),
+              _buildDrawerItem(
+                context,
+                Icons.topic,
+                'Topics',
+                '/topics',
+                tileColor,
+                textColor,
+              ),
+              _buildDrawerItem(
+                context,
+                Icons.tag,
+                'Tags',
+                '/tags',
+                tileColor,
+                textColor,
+              ),
+              _buildDrawerItem(
+                context,
+                Icons.info,
+                'About',
+                '/about',
+                tileColor,
+                textColor,
               ),
               const Divider(),
             ],
@@ -100,6 +118,37 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDrawerItem(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String route,
+    Color tileColor,
+    Color textColor,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+      child: Container(
+        decoration: CyberpunkStyling.getVolumeDecoration(
+          context,
+          bgColor: tileColor,
+        ),
+        child: ListTile(
+          dense: true,
+          shape: CyberpunkStyling.cutEdgeBorder,
+          textColor: textColor,
+          iconColor: textColor,
+          leading: Icon(icon),
+          title: Text(title),
+          onTap: () {
+            context.pop(); // Close the drawer
+            context.go(route);
+          },
+        ),
       ),
     );
   }

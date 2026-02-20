@@ -1,0 +1,88 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../application/services/items_cubit.dart';
+import '../../application/services/items_state.dart';
+import '../../application/services/items_read_service.dart';
+import '../../config/injection.dart';
+import '../widgets/item_preview_widget.dart';
+import '../widgets/main_drawer.dart';
+
+class SearchScreen extends StatelessWidget {
+  const SearchScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider.value(
+      value: sl<ItemsCubit>(),
+      child: const _SearchView(),
+    );
+  }
+}
+
+class _SearchView extends StatefulWidget {
+  const _SearchView();
+
+  @override
+  State<_SearchView> createState() => _SearchViewState();
+}
+
+class _SearchViewState extends State<_SearchView> {
+  @override
+  void initState() {
+    super.initState();
+    sl<IItemsReadService>().searchItems('');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Search')),
+      drawer: const MainDrawer(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: const InputDecoration(
+                labelText: 'Search items, authors, tags...',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.search),
+              ),
+              onChanged: (query) {
+                sl<IItemsReadService>().searchItems(query);
+              },
+            ),
+          ),
+          Expanded(
+            child: BlocBuilder<ItemsCubit, ItemsState>(
+              builder: (context, state) {
+                return switch (state.status) {
+                  ItemsStatus.initial => const Center(
+                    child: Text('Start typing to search.'),
+                  ),
+                  ItemsStatus.loading => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  ItemsStatus.failure => Center(
+                    child: Text('Error: ${state.errorMessage}'),
+                  ),
+                  ItemsStatus.success =>
+                    state.searchResults.isEmpty
+                        ? const Center(child: Text('No results found.'))
+                        : ListView.builder(
+                            itemCount: state.searchResults.length,
+                            itemBuilder: (context, index) {
+                              return ItemPreviewWidget(
+                                item: state.searchResults[index],
+                              );
+                            },
+                          ),
+                };
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
