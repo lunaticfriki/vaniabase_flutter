@@ -191,12 +191,19 @@ class _ItemDetailView extends StatelessWidget {
         const SizedBox(height: 16),
 
         // Title
-        Text(
-          item.title.value,
-          style: theme.textTheme.displaySmall?.copyWith(
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-            height: 1.1,
+        ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Color(0xFFFF00FF), Color(0xFFFFFF00)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ).createShader(bounds),
+          child: Text(
+            item.title.value,
+            style: theme.textTheme.displaySmall?.copyWith(
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+              height: 1.1,
+            ),
           ),
         ),
         const SizedBox(height: 16),
