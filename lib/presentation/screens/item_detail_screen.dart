@@ -335,18 +335,23 @@ class _ItemDetailView extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: item.tags.map((tag) {
-              return Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  '#${tag.toLowerCase()}',
-                  style: const TextStyle(color: Colors.white70, fontSize: 14),
+              return InkWell(
+                onTap: () {
+                  GoRouter.of(context).push('/tags', extra: tag);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    '#${tag.toLowerCase()}',
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
                 ),
               );
             }).toList(),
