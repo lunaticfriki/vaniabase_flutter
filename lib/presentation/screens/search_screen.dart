@@ -27,10 +27,20 @@ class _SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<_SearchView> {
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
   @override
   void initState() {
     super.initState();
     sl<IItemsReadService>().searchItems('');
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -43,6 +53,8 @@ class _SearchViewState extends State<_SearchView> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              controller: _searchController,
+              focusNode: _focusNode,
               decoration: const InputDecoration(
                 labelText: 'Search items, authors, tags...',
                 border: OutlineInputBorder(),
@@ -69,11 +81,29 @@ class _SearchViewState extends State<_SearchView> {
                   ItemsStatus.success =>
                     state.searchResults.isEmpty
                         ? const Center(child: Text('No results found.'))
-                        : ListView.builder(
-                            itemCount: state.searchResults.length,
-                            itemBuilder: (context, index) {
-                              return ItemPreviewWidget(
-                                item: state.searchResults[index],
+                        : LayoutBuilder(
+                            builder: (context, constraints) {
+                              int crossAxisCount = constraints.maxWidth > 800
+                                  ? 5
+                                  : constraints.maxWidth > 600
+                                  ? 4
+                                  : 2;
+
+                              return GridView.builder(
+                                padding: const EdgeInsets.all(16.0),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: crossAxisCount,
+                                      childAspectRatio: 0.46,
+                                      crossAxisSpacing: 16,
+                                      mainAxisSpacing: 16,
+                                    ),
+                                itemCount: state.searchResults.length,
+                                itemBuilder: (context, index) {
+                                  return ItemPreviewWidget(
+                                    item: state.searchResults[index],
+                                  );
+                                },
                               );
                             },
                           ),

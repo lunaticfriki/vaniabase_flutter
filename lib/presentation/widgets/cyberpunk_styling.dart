@@ -37,7 +37,7 @@ class CyberpunkStyling {
       shape: getCutEdgeBorder(borderWidth: 1.5),
       shadows: [
         BoxShadow(
-          color: colorScheme.tertiary,
+          color: colorScheme.secondary.withValues(alpha: 0.5),
           offset: const Offset(4, 4),
           blurRadius: 0,
           spreadRadius: 0,

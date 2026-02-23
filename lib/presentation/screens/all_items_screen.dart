@@ -72,21 +72,38 @@ class _AllItemsViewState extends State<_AllItemsView> {
             ItemsStatus.success when state.items.isEmpty => const Center(
               child: Text('No items found.'),
             ),
-            _ => ListView.builder(
-              controller: _scrollController,
-              itemCount: state.hasReachedMax
-                  ? state.items.length
-                  : state.items.length + 1,
-              itemBuilder: (context, index) {
-                if (index >= state.items.length) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
-                return ItemPreviewWidget(item: state.items[index]);
+            _ => LayoutBuilder(
+              builder: (context, constraints) {
+                int crossAxisCount = constraints.maxWidth > 800
+                    ? 5
+                    : constraints.maxWidth > 600
+                    ? 4
+                    : 2;
+
+                return GridView.builder(
+                  controller: _scrollController,
+                  padding: const EdgeInsets.all(16.0),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount,
+                    childAspectRatio: 0.46,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: state.hasReachedMax
+                      ? state.items.length
+                      : state.items.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index >= state.items.length) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                    return ItemPreviewWidget(item: state.items[index]);
+                  },
+                );
               },
             ),
           };

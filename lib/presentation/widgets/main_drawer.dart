@@ -13,7 +13,7 @@ class MainDrawer extends StatelessWidget {
     const textColor = Colors.white;
 
     return Drawer(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: const Color(0xFF18181B),
       shape: CyberpunkStyling.getCutEdgeBorder(rightBorderOnly: true),
       child: Stack(
         children: [
