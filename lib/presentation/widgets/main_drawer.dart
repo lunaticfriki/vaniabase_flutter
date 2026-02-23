@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import '../../application/services/auth_cubit.dart';
 import 'cyberpunk_styling.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -103,6 +105,14 @@ class MainDrawer extends StatelessWidget {
                 textColor,
               ),
               const Divider(),
+              ListTile(
+                leading: const Icon(Icons.exit_to_app),
+                title: const Text('Logout'),
+                onTap: () {
+                  context.pop();
+                  context.read<AuthCubit>().signOut();
+                },
+              ),
             ],
           ),
           // Custom drawn right edge border to complement the cut bevel shape.

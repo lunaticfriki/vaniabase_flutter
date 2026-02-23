@@ -50,4 +50,8 @@ class ItemsCubit extends Cubit<ItemsState> {
   void updateTags(List<String> tags) {
     emit(state.copyWith(status: ItemsStatus.success, tags: tags));
   }
+
+  void clear() {
+    emit(const ItemsState());
+  }
 }

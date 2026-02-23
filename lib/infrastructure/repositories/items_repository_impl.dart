@@ -73,12 +73,19 @@ class ItemsRepositoryImpl implements IItemsRepository {
 
       final categoryMap = <String, Category>{};
       for (var item in items) {
-        final catId = item.category.id.value;
-        if (!categoryMap.containsKey(catId)) {
-          categoryMap[catId] = item.category;
+        final catName = item.category.name.value.toLowerCase();
+
+        if (catName.isEmpty || catName == 'unknown') continue;
+
+        if (!categoryMap.containsKey(catName)) {
+          categoryMap[catName] = item.category;
         }
       }
-      return (null, categoryMap.values.toList());
+
+      final sortedCategories = categoryMap.values.toList()
+        ..sort((a, b) => a.name.value.compareTo(b.name.value));
+
+      return (null, sortedCategories);
     } catch (e) {
       return (ItemUnexpectedFailure(e.toString()), null);
     }

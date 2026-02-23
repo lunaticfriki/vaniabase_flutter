@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "774636917610",
+    "firebase_url": "https://vaniabase-5d919-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "vaniabase-5d919",
+    "storage_bucket": "vaniabase-5d919.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:774636917610:android:be98567d7af6f60e854b13",
+        "android_client_info": {
+          "package_name": "com.example.vaniabase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "774636917610-k3nuc82ckrp61t5nb52f0ic9qcnsmo2s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.vaniabase",
+            "certificate_hash": "01673449a466eb55c78c89670e8e8ac0da26e087"
+          }
+        },
+        {
+          "client_id": "774636917610-53qsmi59jrn3u5jsdckug16a5jm5k679.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwR2SkvleF-3lx6bfXx4hZQs2HjYmuSQY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "774636917610-53qsmi59jrn3u5jsdckug16a5jm5k679.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

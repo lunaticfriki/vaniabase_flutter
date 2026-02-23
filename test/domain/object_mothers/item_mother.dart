@@ -23,6 +23,7 @@ class ItemMother {
       reference: const Reference('REF-123'),
       category: CategoryMother.test(),
       completed: const Completed(false),
+      ownerId: UniqueId.fromUniqueString('test-owner-id'),
     );
   }
 
@@ -41,6 +42,7 @@ class ItemMother {
       reference: const Reference('REF-123'),
       category: category,
       completed: const Completed(false),
+      ownerId: UniqueId.fromUniqueString('test-owner-id'),
     );
   }
 
@@ -59,6 +61,7 @@ class ItemMother {
     Reference? reference,
     Category? category,
     Completed? completed,
+    UniqueId? ownerId,
   }) {
     return Item.create(
       id: id ?? UniqueId.fromUniqueString('item-id'),
@@ -75,6 +78,7 @@ class ItemMother {
       reference: reference ?? const Reference('REF-123'),
       category: category ?? CategoryMother.test(),
       completed: completed ?? const Completed(false),
+      ownerId: ownerId ?? UniqueId.fromUniqueString('test-owner-id'),
     );
   }
 }

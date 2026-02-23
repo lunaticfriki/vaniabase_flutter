@@ -9,8 +9,7 @@ class Item {
   final Title title;
   final Author author;
   final Publisher publisher;
-  final List<String>
-  tags; // Using List<String> as requested per implementation plan discussion or common practice
+  final List<String> tags;
   final Topic topic;
   final Language language;
   final Cover cover;
@@ -20,6 +19,7 @@ class Item {
   final Reference reference;
   final Category category;
   final Completed completed;
+  final UniqueId ownerId;
 
   const Item._({
     required this.id,
@@ -36,6 +36,7 @@ class Item {
     required this.reference,
     required this.category,
     required this.completed,
+    required this.ownerId,
   });
 
   static Item create({
@@ -52,6 +53,7 @@ class Item {
     required Reference reference,
     required Category category,
     required Completed completed,
+    required UniqueId ownerId,
     UniqueId? id,
   }) {
     return Item._(
@@ -69,29 +71,45 @@ class Item {
       reference: reference,
       category: category,
       completed: completed,
+      ownerId: ownerId,
     );
   }
 
   static Item fromJson(dynamic json) {
-    return Item.create(
-      id: UniqueId.fromUniqueString(json['id']),
-      title: Title(json['title']),
-      author: Author(json['author']),
-      publisher: Publisher(json['publisher']),
-      tags: List<String>.from(json['tags']),
-      topic: Topic(json['topic']),
-      language: Language(json['language']),
-      cover: Cover(json['cover']),
-      description: Description(json['description']),
-      year: Year(json['year']),
-      format: Format(json['format']),
-      reference: Reference(json['reference']),
-      category: Category.create(
-        id: UniqueId.fromUniqueString(json['category']['id']),
-        name: Name(json['category']['name']),
-      ),
-      completed: Completed(json['completed'] ?? false),
-    );
+    try {
+      return Item.create(
+        id: UniqueId.fromUniqueString(json['id']),
+        title: Title(json['title']),
+        author: Author(json['author']),
+        publisher: Publisher(json['publisher']),
+        tags: List<String>.from(json['tags'] ?? []),
+        topic: Topic(json['topic']),
+        language: Language(json['language']),
+        cover: Cover(json['cover']),
+        description: Description(json['description']),
+        year: Year(int.tryParse(json['year'].toString()) ?? 0),
+        format: Format(json['format'] ?? ''),
+        reference: Reference(json['reference'] ?? ''),
+        category: Category.create(
+          id: UniqueId.fromUniqueString(
+            json['category'] is Map
+                ? json['category']['id'] ?? 'unknown-id'
+                : (json['category'] is String
+                      ? json['category']
+                      : 'unknown-id'),
+          ),
+          name: Name(
+            json['category'] is Map
+                ? json['category']['name'] ?? 'Unknown'
+                : (json['category'] is String ? json['category'] : 'Unknown'),
+          ),
+        ),
+        completed: Completed(json['completed'] ?? false),
+        ownerId: UniqueId.fromUniqueString(json['owner'] ?? 'default-owner'),
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 
   static Item empty() {
@@ -110,6 +128,7 @@ class Item {
       reference: const Reference(''),
       category: Category.empty(),
       completed: const Completed(false),
+      ownerId: UniqueId(),
     );
   }
 }
