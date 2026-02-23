@@ -77,35 +77,45 @@ class Item {
 
   static Item fromJson(dynamic json) {
     try {
+      final categoryData = json['category'];
+      String categoryId = 'unknown-id';
+      String categoryName = 'Unknown';
+
+      if (categoryData is Map) {
+        categoryId = (categoryData['id']?.toString() ?? 'unknown-id').trim();
+        categoryName = (categoryData['name']?.toString() ?? 'Unknown').trim();
+      } else if (categoryData is String) {
+        categoryId = categoryData.trim();
+        categoryName = categoryData.trim();
+      }
+
       return Item.create(
-        id: UniqueId.fromUniqueString(json['id']),
-        title: Title(json['title']),
-        author: Author(json['author']),
-        publisher: Publisher(json['publisher']),
-        tags: List<String>.from(json['tags'] ?? []),
-        topic: Topic(json['topic']),
-        language: Language(json['language']),
-        cover: Cover(json['cover']),
-        description: Description(json['description']),
-        year: Year(int.tryParse(json['year'].toString()) ?? 0),
-        format: Format(json['format'] ?? ''),
-        reference: Reference(json['reference'] ?? ''),
-        category: Category.create(
-          id: UniqueId.fromUniqueString(
-            json['category'] is Map
-                ? json['category']['id'] ?? 'unknown-id'
-                : (json['category'] is String
-                      ? json['category']
-                      : 'unknown-id'),
-          ),
-          name: Name(
-            json['category'] is Map
-                ? json['category']['name'] ?? 'Unknown'
-                : (json['category'] is String ? json['category'] : 'Unknown'),
+        id: UniqueId.fromUniqueString((json['id']?.toString() ?? '').trim()),
+        title: Title((json['title']?.toString() ?? '').trim()),
+        author: Author((json['author']?.toString() ?? '').trim()),
+        publisher: Publisher((json['publisher']?.toString() ?? '').trim()),
+        tags: List<String>.from(
+          (json['tags'] as List<dynamic>? ?? []).map(
+            (t) => t.toString().trim(),
           ),
         ),
+        topic: Topic((json['topic']?.toString() ?? '').trim()),
+        language: Language((json['language']?.toString() ?? '').trim()),
+        cover: Cover((json['cover']?.toString() ?? '').trim()),
+        description: Description(
+          (json['description']?.toString() ?? '').trim(),
+        ),
+        year: Year(int.tryParse(json['year']?.toString().trim() ?? '') ?? 0),
+        format: Format((json['format']?.toString() ?? '').trim()),
+        reference: Reference((json['reference']?.toString() ?? '').trim()),
+        category: Category.create(
+          id: UniqueId.fromUniqueString(categoryId),
+          name: Name(categoryName),
+        ),
         completed: Completed(json['completed'] ?? false),
-        ownerId: UniqueId.fromUniqueString(json['owner'] ?? 'default-owner'),
+        ownerId: UniqueId.fromUniqueString(
+          (json['owner']?.toString() ?? 'default-owner').trim(),
+        ),
       );
     } catch (e) {
       rethrow;

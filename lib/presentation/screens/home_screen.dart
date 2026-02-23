@@ -204,7 +204,7 @@ class _HomeViewState extends State<_HomeView> {
         _buildListRow(
           context,
           'Categories',
-          state.categories.map((c) => c.name.value).toList(),
+          state.categories.map((c) => c.name.value).toSet().toList(),
           theme.colorScheme.secondary,
           '/categories',
         ),
@@ -212,12 +212,18 @@ class _HomeViewState extends State<_HomeView> {
         _buildListRow(
           context,
           'Topics',
-          state.topics.map((t) => t.value).toList(),
+          state.topics.map((t) => t.value).toSet().toList(),
           Colors.purpleAccent,
           '/topics',
         ),
         const SizedBox(height: 16),
-        _buildListRow(context, 'Tags', state.tags, Colors.cyan, '/tags'),
+        _buildListRow(
+          context,
+          'Tags',
+          state.tags.toSet().toList(),
+          Colors.cyan,
+          '/tags',
+        ),
       ],
     );
   }
