@@ -4,32 +4,38 @@ import '../../application/services/items_cubit.dart';
 import '../../application/services/items_state.dart';
 import '../../application/services/items_read_service.dart';
 import '../../config/injection.dart';
+import '../widgets/dynamic_list_layout.dart';
 import '../widgets/main_drawer.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
+  final String? initialCategory;
+  const CategoriesScreen({super.key, this.initialCategory});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: sl<ItemsCubit>(),
-      child: const _CategoriesView(),
+      child: _CategoriesView(initialCategory: initialCategory),
     );
   }
 }
 
 class _CategoriesView extends StatefulWidget {
-  const _CategoriesView();
+  final String? initialCategory;
+  const _CategoriesView({this.initialCategory});
 
   @override
   State<_CategoriesView> createState() => _CategoriesViewState();
 }
 
 class _CategoriesViewState extends State<_CategoriesView> {
+  String? _selectedCategory;
+
   @override
   void initState() {
     super.initState();
-    sl<IItemsReadService>().fetchCategories();
+    _selectedCategory = widget.initialCategory?.toLowerCase();
+    sl<IItemsReadService>().fetchAllItems();
   }
 
   @override
@@ -39,27 +45,52 @@ class _CategoriesViewState extends State<_CategoriesView> {
       drawer: const MainDrawer(),
       body: BlocBuilder<ItemsCubit, ItemsState>(
         builder: (context, state) {
-          return switch (state.status) {
-            ItemsStatus.initial || ItemsStatus.loading => const Center(
-              child: CircularProgressIndicator(),
+          if (state.status == ItemsStatus.initial ||
+              state.status == ItemsStatus.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.status == ItemsStatus.failure) {
+            return Center(child: Text('Error: ${state.errorMessage}'));
+          }
+
+          if (state.items.isEmpty) {
+            return const Center(child: Text('No items found.'));
+          }
+
+          // Calculate occurrences
+          final mapCounts = <String, int>{};
+          for (final item in state.items) {
+            final lowerCategory = item.category.name.value.toLowerCase();
+            mapCounts[lowerCategory] = (mapCounts[lowerCategory] ?? 0) + 1;
+          }
+
+          final availableCategories = mapCounts.keys.toList()..sort();
+
+          // Filter items
+          final filteredItems = _selectedCategory == null
+              ? state.items
+              : state.items
+                    .where(
+                      (item) =>
+                          item.category.name.value.toLowerCase() ==
+                          _selectedCategory,
+                    )
+                    .toList();
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: DynamicListLayout(
+              title: 'CATEGORIES',
+              availableOptions: availableCategories,
+              optionCounts: mapCounts,
+              selectedOption: _selectedCategory,
+              onOptionSelected: (option) {
+                setState(() => _selectedCategory = option);
+              },
+              filteredItems: filteredItems,
             ),
-            ItemsStatus.failure => Center(
-              child: Text('Error: ${state.errorMessage}'),
-            ),
-            ItemsStatus.success =>
-              state.categories.isEmpty
-                  ? const Center(child: Text('No categories found.'))
-                  : ListView.builder(
-                      itemCount: state.categories.length,
-                      itemBuilder: (context, index) {
-                        final category = state.categories[index];
-                        return ListTile(
-                          leading: const Icon(Icons.category),
-                          title: Text(category.name.value),
-                        );
-                      },
-                    ),
-          };
+          );
         },
       ),
     );

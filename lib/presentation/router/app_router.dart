@@ -13,6 +13,8 @@ import '../screens/authors_screen.dart';
 import '../screens/topics_screen.dart';
 import '../screens/tags_screen.dart';
 import '../screens/login_screen.dart';
+import '../screens/item_detail_screen.dart';
+import '../../domain/entities/item.dart';
 
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
@@ -60,18 +62,33 @@ class AppRouter {
       ),
       GoRoute(
         path: '/categories',
-        builder: (context, state) => const CategoriesScreen(),
+        builder: (context, state) =>
+            CategoriesScreen(initialCategory: state.extra as String?),
       ),
       GoRoute(
         path: '/authors',
-        builder: (context, state) => const AuthorsScreen(),
+        builder: (context, state) =>
+            AuthorsScreen(initialAuthor: state.extra as String?),
       ),
       GoRoute(
         path: '/topics',
-        builder: (context, state) => const TopicsScreen(),
+        builder: (context, state) =>
+            TopicsScreen(initialTopic: state.extra as String?),
       ),
-      GoRoute(path: '/tags', builder: (context, state) => const TagsScreen()),
+      GoRoute(
+        path: '/tags',
+        builder: (context, state) =>
+            TagsScreen(initialTag: state.extra as String?),
+      ),
       GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
+      GoRoute(
+        path: '/item/:id',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          final item = state.extra as Item?;
+          return ItemDetailScreen(itemId: id, itemData: item);
+        },
+      ),
     ],
   );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../application/services/items_cubit.dart';
 import '../../application/services/items_state.dart';
 import '../../application/services/items_read_service.dart';
@@ -72,11 +73,18 @@ class _HomeViewState extends State<_HomeView> {
                 const SizedBox(height: 32),
 
                 // Latest Items Section
-                Text(
-                  'RECENTLY ADDED',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [Color(0xFFFF00FF), Color(0xFFFFFF00)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ).createShader(bounds),
+                  child: Text(
+                    'RECENTLY ADDED',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -94,11 +102,18 @@ class _HomeViewState extends State<_HomeView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Welcome to the Collection',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
+        ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Color(0xFFFF00FF), Color(0xFFFFFF00)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ).createShader(bounds),
+          child: Text(
+            'Welcome to the Collection',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w900,
+              color: Colors.white,
+            ),
           ),
         ),
         const SizedBox(height: 8),
@@ -153,11 +168,18 @@ class _HomeViewState extends State<_HomeView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            value.toString(),
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.w900,
-              color: color,
+          ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [Color(0xFFFF00FF), Color(0xFFFFFF00)],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ).createShader(bounds),
+            child: Text(
+              value.toString(),
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.w900,
+                color: Colors.white,
+              ),
             ),
           ),
           const SizedBox(height: 8),
@@ -184,6 +206,7 @@ class _HomeViewState extends State<_HomeView> {
           'Categories',
           state.categories.map((c) => c.name.value).toList(),
           theme.colorScheme.secondary,
+          '/categories',
         ),
         const SizedBox(height: 16),
         _buildListRow(
@@ -191,9 +214,10 @@ class _HomeViewState extends State<_HomeView> {
           'Topics',
           state.topics.map((t) => t.value).toList(),
           Colors.purpleAccent,
+          '/topics',
         ),
         const SizedBox(height: 16),
-        _buildListRow(context, 'Tags', state.tags, Colors.cyan),
+        _buildListRow(context, 'Tags', state.tags, Colors.cyan, '/tags'),
       ],
     );
   }
@@ -203,6 +227,7 @@ class _HomeViewState extends State<_HomeView> {
     String title,
     List<String> items,
     Color accentColor,
+    String routeName,
   ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,21 +263,29 @@ class _HomeViewState extends State<_HomeView> {
                   spacing: 8,
                   runSpacing: 8,
                   children: items.map((item) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black26,
-                        border: Border.all(
-                          color: accentColor.withValues(alpha: 0.5),
+                    return InkWell(
+                      onTap: () {
+                        // Pass the item name as extra so the target screen can use it
+                        GoRouter.of(context).push(routeName, extra: item);
+                      },
+                      child: ClipPath(
+                        clipper: const _CyberpunkPillClipper(),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.black26,
+                            border: Border(
+                              left: BorderSide(color: accentColor, width: 2),
+                            ),
+                          ),
+                          child: Text(
+                            item,
+                            style: const TextStyle(color: Colors.white70),
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Text(
-                        item,
-                        style: const TextStyle(color: Colors.white70),
                       ),
                     );
                   }).toList(),
@@ -297,4 +330,27 @@ class _HomeViewState extends State<_HomeView> {
       },
     );
   }
+}
+
+class _CyberpunkPillClipper extends CustomClipper<Path> {
+  const _CyberpunkPillClipper();
+
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    const cut = 8.0;
+
+    path.moveTo(cut, 0);
+    path.lineTo(size.width, 0);
+    path.lineTo(size.width, size.height - cut);
+    path.lineTo(size.width - cut, size.height);
+    path.lineTo(0, size.height);
+    path.lineTo(0, cut);
+    path.close();
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

@@ -4,32 +4,38 @@ import '../../application/services/items_cubit.dart';
 import '../../application/services/items_state.dart';
 import '../../application/services/items_read_service.dart';
 import '../../config/injection.dart';
+import '../widgets/dynamic_list_layout.dart';
 import '../widgets/main_drawer.dart';
 
 class AuthorsScreen extends StatelessWidget {
-  const AuthorsScreen({super.key});
+  final String? initialAuthor;
+  const AuthorsScreen({super.key, this.initialAuthor});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: sl<ItemsCubit>(),
-      child: const _AuthorsView(),
+      child: _AuthorsView(initialAuthor: initialAuthor),
     );
   }
 }
 
 class _AuthorsView extends StatefulWidget {
-  const _AuthorsView();
+  final String? initialAuthor;
+  const _AuthorsView({this.initialAuthor});
 
   @override
   State<_AuthorsView> createState() => _AuthorsViewState();
 }
 
 class _AuthorsViewState extends State<_AuthorsView> {
+  String? _selectedAuthor;
+
   @override
   void initState() {
     super.initState();
-    sl<IItemsReadService>().fetchAuthors();
+    _selectedAuthor = widget.initialAuthor?.toLowerCase();
+    sl<IItemsReadService>().fetchAllItems();
   }
 
   @override
@@ -39,26 +45,51 @@ class _AuthorsViewState extends State<_AuthorsView> {
       drawer: const MainDrawer(),
       body: BlocBuilder<ItemsCubit, ItemsState>(
         builder: (context, state) {
-          return switch (state.status) {
-            ItemsStatus.initial || ItemsStatus.loading => const Center(
-              child: CircularProgressIndicator(),
+          if (state.status == ItemsStatus.initial ||
+              state.status == ItemsStatus.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state.status == ItemsStatus.failure) {
+            return Center(child: Text('Error: ${state.errorMessage}'));
+          }
+
+          if (state.items.isEmpty) {
+            return const Center(child: Text('No items found.'));
+          }
+
+          // Calculate occurrences
+          final mapCounts = <String, int>{};
+          for (final item in state.items) {
+            final lowerAuthor = item.author.value.toLowerCase();
+            mapCounts[lowerAuthor] = (mapCounts[lowerAuthor] ?? 0) + 1;
+          }
+
+          final availableAuthors = mapCounts.keys.toList()..sort();
+
+          // Filter items
+          final filteredItems = _selectedAuthor == null
+              ? state.items
+              : state.items
+                    .where(
+                      (item) =>
+                          item.author.value.toLowerCase() == _selectedAuthor,
+                    )
+                    .toList();
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(24.0),
+            child: DynamicListLayout(
+              title: 'AUTHORS',
+              availableOptions: availableAuthors,
+              optionCounts: mapCounts,
+              selectedOption: _selectedAuthor,
+              onOptionSelected: (option) {
+                setState(() => _selectedAuthor = option);
+              },
+              filteredItems: filteredItems,
             ),
-            ItemsStatus.failure => Center(
-              child: Text('Error: ${state.errorMessage}'),
-            ),
-            ItemsStatus.success =>
-              state.authors.isEmpty
-                  ? const Center(child: Text('No authors found.'))
-                  : ListView.builder(
-                      itemCount: state.authors.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          leading: const Icon(Icons.person),
-                          title: Text(state.authors[index].value),
-                        );
-                      },
-                    ),
-          };
+          );
         },
       ),
     );
