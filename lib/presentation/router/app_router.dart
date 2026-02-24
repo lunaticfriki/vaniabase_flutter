@@ -14,6 +14,8 @@ import '../screens/topics_screen.dart';
 import '../screens/tags_screen.dart';
 import '../screens/login_screen.dart';
 import '../screens/item_detail_screen.dart';
+import '../screens/new_item_screen.dart';
+import '../screens/edit_item_screen.dart';
 import '../../domain/entities/item.dart';
 
 class GoRouterRefreshStream extends ChangeNotifier {
@@ -61,6 +63,10 @@ class AppRouter {
         builder: (context, state) => const SearchScreen(),
       ),
       GoRoute(
+        path: '/item/new',
+        builder: (context, state) => const NewItemScreen(),
+      ),
+      GoRoute(
         path: '/categories',
         builder: (context, state) =>
             CategoriesScreen(initialCategory: state.extra as String?),
@@ -87,6 +93,14 @@ class AppRouter {
           final id = state.pathParameters['id']!;
           final item = state.extra as Item?;
           return ItemDetailScreen(itemId: id, itemData: item);
+        },
+      ),
+      GoRoute(
+        path: '/item/:id/edit',
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          final item = state.extra as Item?;
+          return EditItemScreen(itemId: id, itemData: item);
         },
       ),
     ],

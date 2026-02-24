@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 
 abstract class IItemsDataSource {
   Future<List<dynamic>> fetchItems();
+  Future<void> createItem(Map<String, dynamic> itemMap);
+  Future<void> updateItem(Map<String, dynamic> itemMap);
+  Future<void> deleteItem(String id);
 }
 
 class SeedItemsDataSource implements IItemsDataSource {
@@ -15,5 +18,23 @@ class SeedItemsDataSource implements IItemsDataSource {
     } catch (e) {
       throw Exception('Failed to load seed data: $e');
     }
+  }
+
+  @override
+  Future<void> createItem(Map<String, dynamic> itemMap) async {
+    // No-op for seed data
+    return;
+  }
+
+  @override
+  Future<void> updateItem(Map<String, dynamic> itemMap) async {
+    // No-op for seed data
+    return;
+  }
+
+  @override
+  Future<void> deleteItem(String id) async {
+    // No-op for seed data
+    return;
   }
 }

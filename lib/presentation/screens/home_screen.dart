@@ -45,6 +45,19 @@ class _HomeViewState extends State<_HomeView> {
     return Scaffold(
       appBar: AppBar(title: const Text('Dashboard')),
       drawer: const MainDrawer(),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => GoRouter.of(context).push('/item/new'),
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        icon: const Icon(Icons.add, color: Colors.white),
+        label: const Text(
+          'ADD NEW ITEM',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.5,
+          ),
+        ),
+      ),
       body: BlocBuilder<ItemsCubit, ItemsState>(
         builder: (context, state) {
           if (state.status == ItemsStatus.initial ||

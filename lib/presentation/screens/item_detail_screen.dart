@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/entities/item.dart';
+import '../../config/injection.dart';
+import '../../application/services/items_write_service.dart';
 import '../widgets/cyberpunk_styling.dart';
 import '../widgets/main_drawer.dart';
 
@@ -56,7 +58,10 @@ class _ItemDetailView extends StatelessWidget {
                   children: [
                     TextButton.icon(
                       onPressed: () {
-                        context.push('/edit/${item.id.value}', extra: item);
+                        context.push(
+                          '/item/${item.id.value}/edit',
+                          extra: item,
+                        );
                       },
                       icon: Icon(
                         Icons.edit,
@@ -74,7 +79,7 @@ class _ItemDetailView extends StatelessWidget {
                     ),
                     TextButton.icon(
                       onPressed: () {
-                        print('Delete tapped for ${item.id.value}');
+                        _showDeleteDialog(context, theme);
                       },
                       icon: const Icon(
                         Icons.delete,
@@ -408,6 +413,81 @@ class _ItemDetailView extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
         ),
       ],
+    );
+  }
+
+  void _showDeleteDialog(BuildContext context, ThemeData theme) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF18181B), // zinc-900
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: theme.colorScheme.secondary.withValues(alpha: 0.5),
+            ),
+          ),
+          title: Text(
+            'DELETE ITEM',
+            style: TextStyle(
+              color: theme.colorScheme.secondary,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 2,
+            ),
+          ),
+          content: Text(
+            'Are you sure you want to delete "${item.title.value}"? This action cannot be undone and will remove the item cover image if it exists.',
+            style: const TextStyle(color: Colors.white70),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text(
+                'CANCEL',
+                style: TextStyle(color: Colors.white60),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(dialogContext).pop();
+
+                // Use a local loading dialog or just context.go with snackbar
+                // Since ItemsWriteService controls a cubit, we should ideally wrap the page
+                // in a BlocListener, but for simplicity here we just await the service directly.
+                // Normally we'd dispatch to cubit and listen for success.
+                try {
+                  await sl<IItemsWriteService>().deleteItem(item);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Item deleted successfully'),
+                      ),
+                    );
+                    context.go('/');
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Failed to delete item: $e'),
+                        backgroundColor: Colors.redAccent,
+                      ),
+                    );
+                  }
+                }
+              },
+              child: const Text(
+                'DELETE',
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

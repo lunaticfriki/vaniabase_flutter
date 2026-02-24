@@ -2,6 +2,7 @@ import '../../domain/entities/item.dart';
 import '../../domain/entities/item_failure.dart';
 import '../../domain/entities/category.dart';
 import '../../domain/value_objects/string_value_objects.dart';
+import '../../domain/value_objects/unique_id.dart';
 import '../../domain/repositories/i_items_repository.dart';
 import '../data_sources/seed_items_data_source.dart';
 
@@ -142,6 +143,78 @@ class ItemsRepositoryImpl implements IItemsRepository {
       return (null, tagsSet.toList());
     } catch (e) {
       return (ItemUnexpectedFailure(e.toString()), null);
+    }
+  }
+
+  @override
+  Future<ItemFailure?> createItem(Item item) async {
+    try {
+      final map = {
+        'id': item.id.value,
+        'title': item.title.value,
+        'author': item.author.value,
+        'publisher': item.publisher.value,
+        'tags': item.tags,
+        'topic': item.topic.value,
+        'language': item.language.value,
+        'cover': item.cover.value,
+        'description': item.description.value,
+        'year': item.year.value,
+        'format': item.format.value,
+        'reference': item.reference.value,
+        'category': {
+          'id': item.category.id.value,
+          'name': item.category.name.value,
+        },
+        'completed': item.completed.value,
+        'owner': item.ownerId.value,
+      };
+
+      await _dataSource.createItem(map);
+      return null;
+    } catch (e) {
+      return ItemUnexpectedFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<ItemFailure?> updateItem(Item item) async {
+    try {
+      final map = {
+        'id': item.id.value,
+        'title': item.title.value,
+        'author': item.author.value,
+        'publisher': item.publisher.value,
+        'tags': item.tags,
+        'topic': item.topic.value,
+        'language': item.language.value,
+        'cover': item.cover.value,
+        'description': item.description.value,
+        'year': item.year.value,
+        'format': item.format.value,
+        'reference': item.reference.value,
+        'category': {
+          'id': item.category.id.value,
+          'name': item.category.name.value,
+        },
+        'completed': item.completed.value,
+        'owner': item.ownerId.value,
+      };
+
+      await _dataSource.updateItem(map);
+      return null;
+    } catch (e) {
+      return ItemUnexpectedFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<ItemFailure?> deleteItem(UniqueId id) async {
+    try {
+      await _dataSource.deleteItem(id.value);
+      return null;
+    } catch (e) {
+      return ItemUnexpectedFailure(e.toString());
     }
   }
 }

@@ -31,7 +31,7 @@ class MainDrawer extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Menu',
+                  'VANIABASE',
                   style: TextStyle(
                     color: Theme.of(context).brightness == Brightness.dark
                         ? Theme.of(context).colorScheme.secondary
