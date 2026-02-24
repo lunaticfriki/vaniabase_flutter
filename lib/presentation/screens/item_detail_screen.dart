@@ -390,7 +390,7 @@ class _ItemDetailView extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          value,
+          value.toUpperCase(),
           style: const TextStyle(
             color: Colors.white,
             fontSize: 16,
