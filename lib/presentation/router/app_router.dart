@@ -90,9 +90,8 @@ class AppRouter {
       GoRoute(
         path: '/item/:id',
         builder: (context, state) {
-          final id = state.pathParameters['id']!;
           final item = state.extra as Item?;
-          return ItemDetailScreen(itemId: id, itemData: item);
+          return ItemDetailScreen(item: item!);
         },
       ),
       GoRoute(

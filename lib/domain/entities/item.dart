@@ -153,4 +153,42 @@ class Item {
       createdAt: DateTime.now(),
     );
   }
+
+  Item copyWith({
+    UniqueId? id,
+    Title? title,
+    Author? author,
+    Publisher? publisher,
+    List<String>? tags,
+    Topic? topic,
+    Language? language,
+    Cover? cover,
+    Description? description,
+    Year? year,
+    Format? format,
+    Reference? reference,
+    Category? category,
+    Completed? completed,
+    UniqueId? ownerId,
+    DateTime? createdAt,
+  }) {
+    return Item._(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      author: author ?? this.author,
+      publisher: publisher ?? this.publisher,
+      tags: tags ?? this.tags,
+      topic: topic ?? this.topic,
+      language: language ?? this.language,
+      cover: cover ?? this.cover,
+      description: description ?? this.description,
+      year: year ?? this.year,
+      format: format ?? this.format,
+      reference: reference ?? this.reference,
+      category: category ?? this.category,
+      completed: completed ?? this.completed,
+      ownerId: ownerId ?? this.ownerId,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
 }

@@ -216,13 +216,91 @@ class _HomeViewState extends State<_HomeView> {
   Widget _buildListsSection(BuildContext context, ItemsState state) {
     final theme = Theme.of(context);
 
+    // Compute frequencies from state.items for all pills
+    Map<String, int> catCounts = {};
+    Map<String, int> topicCounts = {};
+    Map<String, int> tagCounts = {};
+    Map<String, int> pubCounts = {};
+
+    for (var item in state.items) {
+      // Categories
+      final cat = item.category.name.value;
+      if (cat.isNotEmpty && cat.toLowerCase() != 'unknown') {
+        catCounts[cat] = (catCounts[cat] ?? 0) + 1;
+      }
+
+      // Topics
+      final topic = item.topic.value;
+      if (topic.isNotEmpty) {
+        topicCounts[topic] = (topicCounts[topic] ?? 0) + 1;
+      }
+
+      // Tags
+      for (var tag in item.tags) {
+        if (tag.isNotEmpty) {
+          tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
+        }
+      }
+
+      // Publishers (Editors)
+      final pub = item.publisher.value;
+      if (pub.isNotEmpty && pub.toLowerCase() != 'unknown') {
+        pubCounts[pub] = (pubCounts[pub] ?? 0) + 1;
+      }
+    }
+
+    // Convert frequency maps to formatted strings "Name (Count)" and sort them
+    final categoriesList =
+        state.categories
+            .map((c) => c.name.value)
+            .where((name) => catCounts.containsKey(name))
+            .map((name) => '$name (${catCounts[name]})')
+            .toList()
+          ..sort();
+
+    final topicsList =
+        state.topics
+            .map((t) => t.value)
+            .where((val) => topicCounts.containsKey(val))
+            .map((val) => '$val (${topicCounts[val]})')
+            .toList()
+          ..sort();
+
+    final tagsList =
+        state.tags
+            .where((tag) => tagCounts.containsKey(tag))
+            .map((tag) => '$tag (${tagCounts[tag]})')
+            .toList()
+          ..sort();
+
+    final publishersList =
+        state.publishers
+            .where((pub) => pubCounts.containsKey(pub))
+            .map((pub) => '$pub (${pubCounts[pub]})')
+            .toList()
+          ..sort();
+
+    // Get the last 5 completed items
+    final completedItems = state.items.where((i) => i.completed.value).toList();
+    // Sort by timestamp (newest first)
+    completedItems.sort(
+      (a, b) => (b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
+          .compareTo(a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)),
+    );
+    final last5CompletedNames = completedItems
+        .take(5)
+        .map((i) => i.title.value)
+        .toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _buildListRow(
           context,
           'Categories',
-          state.categories.map((c) => c.name.value).toSet().toList(),
+          categoriesList.isNotEmpty
+              ? categoriesList
+              : state.categories.map((c) => c.name.value).toList(),
           theme.colorScheme.secondary,
           '/categories',
         ),
@@ -230,7 +308,9 @@ class _HomeViewState extends State<_HomeView> {
         _buildListRow(
           context,
           'Topics',
-          state.topics.map((t) => t.value).toSet().toList(),
+          topicsList.isNotEmpty
+              ? topicsList
+              : state.topics.map((t) => t.value).toList(),
           Colors.purpleAccent,
           '/topics',
         ),
@@ -238,7 +318,7 @@ class _HomeViewState extends State<_HomeView> {
         _buildListRow(
           context,
           'Tags',
-          state.tags.toSet().toList(),
+          tagsList.isNotEmpty ? tagsList : state.tags,
           Colors.cyan,
           '/tags',
         ),
@@ -246,15 +326,17 @@ class _HomeViewState extends State<_HomeView> {
         _buildListRow(
           context,
           'Editors',
-          state.publishers,
+          publishersList.isNotEmpty ? publishersList : state.publishers,
           Colors.pinkAccent,
           '/', // Placeholder: No '/editors' screen currently exists
         ),
         const SizedBox(height: 16),
         _buildListRow(
           context,
-          'Completed',
-          ['Yes (Total: ${state.completedItems})'],
+          'Completed (${state.completedItems})',
+          last5CompletedNames.isNotEmpty
+              ? last5CompletedNames
+              : ['No items completed'],
           Colors.greenAccent,
           '/', // Placeholder
         ),

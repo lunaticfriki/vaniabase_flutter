@@ -1,130 +1,158 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/item.dart';
+import '../../domain/value_objects/completed.dart';
 import '../../config/injection.dart';
 import '../../application/services/items_write_service.dart';
+import '../../application/services/items_write_cubit.dart';
+import '../../application/services/items_write_state.dart';
+import '../../application/services/items_read_service.dart';
 import '../widgets/cyberpunk_styling.dart';
+import '../widgets/cyberpunk_fab.dart';
 import '../widgets/main_drawer.dart';
 
 class ItemDetailScreen extends StatelessWidget {
-  final String itemId;
-  final Item? itemData;
+  final Item item;
 
-  const ItemDetailScreen({super.key, required this.itemId, this.itemData});
+  const ItemDetailScreen({super.key, required this.item});
 
   @override
   Widget build(BuildContext context) {
-    if (itemData == null) {
-      return const Scaffold(
-        body: Center(child: Text('Item not found or loading...')),
-      );
-    }
-    return _ItemDetailView(item: itemData!);
+    return BlocProvider.value(
+      value: sl<ItemsWriteCubit>(),
+      child: _ItemDetailView(item: item),
+    );
   }
 }
 
-class _ItemDetailView extends StatelessWidget {
+class _ItemDetailView extends StatefulWidget {
   final Item item;
 
   const _ItemDetailView({required this.item});
 
   @override
+  State<_ItemDetailView> createState() => _ItemDetailViewState();
+}
+
+class _ItemDetailViewState extends State<_ItemDetailView> {
+  late ScrollController _scrollController;
+  late Item currentItem;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    currentItem = widget.item;
+  }
+
+  void _toggleCompleted() {
+    final updatedItem = currentItem.copyWith(
+      completed: Completed(!currentItem.completed.value),
+    );
+
+    sl<IItemsWriteService>().updateItem(updatedItem);
+
+    setState(() {
+      currentItem = updatedItem;
+    });
+
+    // We also want to refresh the general read state so the dashboard stays up to date
+    sl<IItemsReadService>().fetchAllItems(refresh: true);
+    sl<IItemsReadService>().fetchLatestItems();
+    sl<IItemsReadService>().fetchStats();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Scaffold(
-      appBar: AppBar(title: const Text('Item Details')),
-      drawer: const MainDrawer(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton.icon(
-                  onPressed: () => context.pop(),
-                  icon: const Icon(Icons.arrow_back, color: Colors.white60),
-                  label: const Text(
-                    'BACK',
-                    style: TextStyle(color: Colors.white60),
-                  ),
-                  style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                ),
-                Row(
-                  children: [
-                    TextButton.icon(
-                      onPressed: () {
-                        context.push(
-                          '/item/${item.id.value}/edit',
-                          extra: item,
-                        );
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        color: theme.colorScheme.secondary,
-                        size: 16,
-                      ),
-                      label: Text(
-                        'EDIT',
-                        style: TextStyle(
-                          color: theme.colorScheme.secondary,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2,
-                        ),
-                      ),
-                    ),
-                    TextButton.icon(
-                      onPressed: () {
-                        _showDeleteDialog(context, theme);
-                      },
-                      icon: const Icon(
-                        Icons.delete,
-                        color: Colors.redAccent,
-                        size: 16,
-                      ),
-                      label: const Text(
-                        'DELETE',
-                        style: TextStyle(
-                          color: Colors.redAccent,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 2,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+    return BlocListener<ItemsWriteCubit, ItemsWriteState>(
+      listener: (context, state) {
+        if (state is ItemsWriteSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Item updated successfully')),
+          );
+        } else if (state is ItemsWriteFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: ${state.errorMessage}'),
+              backgroundColor: Colors.redAccent,
             ),
-            const SizedBox(height: 32),
-
-            LayoutBuilder(
-              builder: (context, constraints) {
-                if (constraints.maxWidth > 800) {
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(flex: 2, child: _buildCoverColumn(context)),
-                      const SizedBox(width: 48),
-                      Expanded(
-                        flex: 3,
-                        child: _buildDetailsColumn(context, theme),
-                      ),
-                    ],
-                  );
-                }
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildCoverColumn(context),
-                    const SizedBox(height: 32),
-                    _buildDetailsColumn(context, theme),
-                  ],
+          );
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(currentItem.title.value),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                GoRouter.of(context).push(
+                  '/item/${currentItem.id.value}/edit',
+                  extra: currentItem,
                 );
               },
             ),
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.redAccent),
+              onPressed: () => _confirmDelete(context, currentItem),
+            ),
           ],
+        ),
+        drawer: const MainDrawer(),
+        floatingActionButton: CyberpunkFab(scrollController: _scrollController),
+        body: SingleChildScrollView(
+          controller: _scrollController,
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton.icon(
+                    onPressed: () => context.pop(),
+                    icon: const Icon(Icons.arrow_back, color: Colors.white60),
+                    label: const Text(
+                      'BACK',
+                      style: TextStyle(color: Colors.white60),
+                    ),
+                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 32),
+
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  if (constraints.maxWidth > 800) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 2, child: _buildCoverColumn(context)),
+                        const SizedBox(width: 48),
+                        Expanded(
+                          flex: 3,
+                          child: _buildDetailsColumn(
+                            context,
+                            Theme.of(context),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildCoverColumn(context),
+                      const SizedBox(height: 32),
+                      _buildDetailsColumn(context, Theme.of(context)),
+                    ],
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -139,7 +167,7 @@ class _ItemDetailView extends StatelessWidget {
       ),
       child: AspectRatio(
         aspectRatio: 2 / 3,
-        child: item.cover.value.isEmpty
+        child: currentItem.cover.value.isEmpty
             ? Container(
                 color: Colors.black26,
                 child: const Icon(
@@ -149,7 +177,7 @@ class _ItemDetailView extends StatelessWidget {
                 ),
               )
             : Image.network(
-                item.cover.value,
+                currentItem.cover.value,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
@@ -173,13 +201,13 @@ class _ItemDetailView extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           decoration: BoxDecoration(
-            color: theme.colorScheme.secondary.withValues(alpha: 0.2),
+            color: theme.colorScheme.secondary.withOpacity(0.2),
             border: Border(
               left: BorderSide(color: theme.colorScheme.secondary, width: 2),
             ),
           ),
           child: Text(
-            item.category.name.value.toUpperCase(),
+            currentItem.category.name.value.toUpperCase(),
             style: TextStyle(
               color: theme.colorScheme.secondary,
               fontWeight: FontWeight.bold,
@@ -196,7 +224,7 @@ class _ItemDetailView extends StatelessWidget {
             end: Alignment.centerRight,
           ).createShader(bounds),
           child: Text(
-            item.title.value,
+            currentItem.title.value,
             style: theme.textTheme.displaySmall?.copyWith(
               fontWeight: FontWeight.w900,
               color: Colors.white,
@@ -212,7 +240,7 @@ class _ItemDetailView extends StatelessWidget {
             style: const TextStyle(color: Colors.white60, fontSize: 18),
             children: [
               TextSpan(
-                text: item.author.value.toUpperCase(),
+                text: currentItem.author.value.toUpperCase(),
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -224,7 +252,7 @@ class _ItemDetailView extends StatelessWidget {
         const SizedBox(height: 32),
 
         Text(
-          item.description.value,
+          currentItem.description.value,
           style: const TextStyle(
             color: Colors.white70,
             fontSize: 16,
@@ -236,14 +264,12 @@ class _ItemDetailView extends StatelessWidget {
         SizedBox(
           width: double.infinity,
           child: OutlinedButton(
-            onPressed: () {
-              print('Toggled complete status for ${item.title.value}');
-            },
+            onPressed: _toggleCompleted,
             style: OutlinedButton.styleFrom(
-              backgroundColor: item.completed.value
-                  ? Colors.white.withValues(alpha: 0.1)
+              backgroundColor: currentItem.completed.value
+                  ? Colors.white.withOpacity(0.1)
                   : Colors.green,
-              foregroundColor: item.completed.value
+              foregroundColor: currentItem.completed.value
                   ? Colors.white
                   : Colors.black,
               side: BorderSide.none,
@@ -256,7 +282,9 @@ class _ItemDetailView extends StatelessWidget {
               ),
             ),
             child: Text(
-              item.completed.value ? 'MARK UNCOMPLETED' : 'MARK COMPLETED',
+              currentItem.completed.value
+                  ? 'MARK UNCOMPLETED'
+                  : 'MARK COMPLETED',
               style: const TextStyle(
                 fontWeight: FontWeight.w900,
                 letterSpacing: 2,
@@ -271,7 +299,7 @@ class _ItemDetailView extends StatelessWidget {
           padding: const EdgeInsets.only(top: 24),
           decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+              top: BorderSide(color: Colors.white.withOpacity(0.1)),
             ),
           ),
           child: GridView.count(
@@ -282,37 +310,45 @@ class _ItemDetailView extends StatelessWidget {
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
             children: [
-              _buildDetailItem('YEAR', item.year.value.toString()),
+              _buildDetailItem('YEAR', currentItem.year.value.toString()),
               _buildDetailItem(
                 'PUBLISHER',
-                item.publisher.value.isEmpty ? '-' : item.publisher.value,
+                currentItem.publisher.value.isEmpty
+                    ? '-'
+                    : currentItem.publisher.value,
               ),
               _buildDetailItem(
                 'REFERENCE',
-                item.reference.value.isEmpty ? '-' : item.reference.value,
+                currentItem.reference.value.isEmpty
+                    ? '-'
+                    : currentItem.reference.value,
               ),
               _buildDetailItem(
                 'LANGUAGE',
-                item.language.value.isEmpty ? '-' : item.language.value,
+                currentItem.language.value.isEmpty
+                    ? '-'
+                    : currentItem.language.value,
               ),
               _buildDetailItem(
                 'FORMAT',
-                item.format.value.isEmpty ? '-' : item.format.value,
+                currentItem.format.value.isEmpty
+                    ? '-'
+                    : currentItem.format.value,
               ),
               _buildDetailItem(
                 'TOPIC',
-                item.topic.value.isEmpty ? '-' : item.topic.value,
+                currentItem.topic.value.isEmpty ? '-' : currentItem.topic.value,
               ),
               _buildDetailItem(
                 'COMPLETED',
-                item.completed.value ? 'Yes' : 'No',
+                currentItem.completed.value ? 'Yes' : 'No',
               ),
             ],
           ),
         ),
         const SizedBox(height: 32),
 
-        if (item.tags.isNotEmpty) ...[
+        if (currentItem.tags.isNotEmpty) ...[
           const Text(
             'TAGS',
             style: TextStyle(
@@ -326,7 +362,7 @@ class _ItemDetailView extends StatelessWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: item.tags.map((tag) {
+            children: currentItem.tags.map((tag) {
               return InkWell(
                 onTap: () {
                   GoRouter.of(context).push('/tags', extra: tag);
@@ -337,7 +373,7 @@ class _ItemDetailView extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.05),
+                    color: Colors.white.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -362,7 +398,7 @@ class _ItemDetailView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
+              color: Colors.white.withOpacity(0.05),
               borderRadius: BorderRadius.circular(4),
             ),
             child: const Text(
@@ -403,7 +439,8 @@ class _ItemDetailView extends StatelessWidget {
     );
   }
 
-  void _showDeleteDialog(BuildContext context, ThemeData theme) {
+  void _confirmDelete(BuildContext context, Item item) {
+    final theme = Theme.of(context);
     showDialog(
       context: context,
       builder: (dialogContext) {
@@ -412,7 +449,7 @@ class _ItemDetailView extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: theme.colorScheme.secondary.withValues(alpha: 0.5),
+              color: theme.colorScheme.secondary.withOpacity(0.5),
             ),
           ),
           title: Text(
