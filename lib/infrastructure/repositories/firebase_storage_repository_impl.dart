@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../../domain/repositories/i_storage_repository.dart';
 
@@ -33,6 +33,8 @@ class FirebaseStorageRepositoryImpl implements IStorageRepository {
     try {
       final ref = _firebaseStorage.refFromURL(coverUrl);
       await ref.delete();
-    } catch (e) {}
+    } catch (e) {
+      debugPrint('Error deleting item cover from storage: \$e');
+    }
   }
 }

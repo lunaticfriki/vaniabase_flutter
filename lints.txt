@@ -1,0 +1,12 @@
+Analyzing vaniabase...                                          
+
+   info • Empty catch block • lib/infrastructure/repositories/firebase_auth_repository_impl.dart:109:17 • empty_catches
+   info • Empty catch block • lib/infrastructure/repositories/firebase_storage_repository_impl.dart:36:17 • empty_catches
+   info • Use the null-aware operator '?.' rather than an explicit 'null' comparison • lib/infrastructure/repositories/items_repository_impl.dart:258:23 • prefer_null_aware_operators
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/screens/item_detail_screen.dart:203:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/screens/item_detail_screen.dart:269:34 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/screens/item_detail_screen.dart:301:51 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/screens/item_detail_screen.dart:375:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/screens/item_detail_screen.dart:400:35 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/presentation/screens/item_detail_screen.dart:451:50 • deprecated_member_use
+

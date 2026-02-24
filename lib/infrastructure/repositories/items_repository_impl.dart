@@ -254,10 +254,7 @@ class ItemsRepositoryImpl implements IItemsRepository {
         },
         'completed': item.completed.value,
         'owner': item.ownerId.value,
-
-        'created_at': item.createdAt != null
-            ? item.createdAt!.millisecondsSinceEpoch
-            : null,
+        'created_at': item.createdAt?.millisecondsSinceEpoch,
       };
 
       map.removeWhere((key, value) => value == null);

@@ -106,7 +106,9 @@ class FirebaseAuthRepositoryImpl implements IAuthRepository {
           }
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      debugPrint('Error parsing user data from Firestore: \$e');
+    }
 
     return User.create(
       id: UniqueId.fromUniqueString(user.uid),

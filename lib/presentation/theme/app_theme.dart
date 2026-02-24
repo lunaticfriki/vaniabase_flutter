@@ -11,7 +11,7 @@ class AppTheme {
   static final ThemeData themeData = ThemeData(
     useMaterial3: true,
     brightness: Brightness.dark,
-    fontFamily: GoogleFonts.inconsolata().fontFamily,
+    fontFamily: GoogleFonts.rajdhani().fontFamily,
     colorScheme: ColorScheme.fromSeed(
       seedColor: _violet,
       brightness: Brightness.dark,
@@ -32,7 +32,7 @@ class AppTheme {
       backgroundColor: _darkBackground,
       contentTextStyle: TextStyle(
         color: Colors.white,
-        fontFamily: GoogleFonts.inconsolata().fontFamily,
+        fontFamily: GoogleFonts.rajdhani().fontFamily,
       ),
       shape: CyberpunkStyling.getCutEdgeBorder(
         borderColor: _magenta,

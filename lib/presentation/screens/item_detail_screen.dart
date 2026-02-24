@@ -106,22 +106,6 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton.icon(
-                    onPressed: () => context.pop(),
-                    icon: const Icon(Icons.arrow_back, color: Colors.white60),
-                    label: const Text(
-                      'BACK',
-                      style: TextStyle(color: Colors.white60),
-                    ),
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 32),
-
               LayoutBuilder(
                 builder: (context, constraints) {
                   if (constraints.maxWidth > 800) {
@@ -200,7 +184,7 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           decoration: BoxDecoration(
-            color: theme.colorScheme.secondary.withOpacity(0.2),
+            color: theme.colorScheme.secondary.withValues(alpha: 0.2),
             border: Border(
               left: BorderSide(color: theme.colorScheme.secondary, width: 2),
             ),
@@ -266,7 +250,7 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
             onPressed: _toggleCompleted,
             style: OutlinedButton.styleFrom(
               backgroundColor: currentItem.completed.value
-                  ? Colors.white.withOpacity(0.1)
+                  ? Colors.white.withValues(alpha: 0.1)
                   : Colors.green,
               foregroundColor: currentItem.completed.value
                   ? Colors.white
@@ -298,7 +282,7 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
           padding: const EdgeInsets.only(top: 24),
           decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(color: Colors.white.withOpacity(0.1)),
+              top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
             ),
           ),
           child: GridView.count(
@@ -372,7 +356,7 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -397,7 +381,7 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.05),
+              color: Colors.white.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(4),
             ),
             child: const Text(
@@ -448,7 +432,7 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: theme.colorScheme.secondary.withOpacity(0.5),
+              color: theme.colorScheme.secondary.withValues(alpha: 0.5),
             ),
           ),
           title: Text(
