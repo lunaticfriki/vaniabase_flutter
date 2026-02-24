@@ -42,7 +42,11 @@ class ItemsRepositoryImpl implements IItemsRepository {
     try {
       final rawData = await _dataSource.fetchItems();
       final items = rawData.map((e) => Item.fromJson(e)).toList();
-      final latest = items.reversed.take(count).toList();
+      items.sort(
+        (a, b) => (b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
+            .compareTo(a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)),
+      );
+      final latest = items.take(count).toList();
       return (null, latest);
     } catch (e) {
       return (ItemUnexpectedFailure(e.toString()), null);
@@ -168,6 +172,7 @@ class ItemsRepositoryImpl implements IItemsRepository {
         },
         'completed': item.completed.value,
         'owner': item.ownerId.value,
+        'created_at': (item.createdAt ?? DateTime.now()).millisecondsSinceEpoch,
       };
 
       await _dataSource.createItem(map);
@@ -199,7 +204,14 @@ class ItemsRepositoryImpl implements IItemsRepository {
         },
         'completed': item.completed.value,
         'owner': item.ownerId.value,
+        // Optional: you can choose not to update created_at, but we include it if present
+        'created_at': item.createdAt != null
+            ? item.createdAt!.millisecondsSinceEpoch
+            : null,
       };
+
+      // Remove nulls so we don't accidentally overwrite with nulls
+      map.removeWhere((key, value) => value == null);
 
       await _dataSource.updateItem(map);
       return null;

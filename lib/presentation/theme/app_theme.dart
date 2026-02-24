@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../widgets/cyberpunk_styling.dart';
 
 class AppTheme {
-  static const Color _violet = Color(0xFF2E004F);
+  static const Color _violet = Color.fromARGB(255, 80, 12, 129);
   static const Color _magenta = Color(0xFFFF00FF);
   static const Color _yellow = Color(0xFFFFFF00);
 

@@ -20,6 +20,7 @@ class Item {
   final Category category;
   final Completed completed;
   final UniqueId ownerId;
+  final DateTime? createdAt;
 
   const Item._({
     required this.id,
@@ -37,6 +38,7 @@ class Item {
     required this.category,
     required this.completed,
     required this.ownerId,
+    this.createdAt,
   });
 
   static Item create({
@@ -54,6 +56,7 @@ class Item {
     required Category category,
     required Completed completed,
     required UniqueId ownerId,
+    DateTime? createdAt,
     UniqueId? id,
   }) {
     return Item._(
@@ -72,6 +75,7 @@ class Item {
       category: category,
       completed: completed,
       ownerId: ownerId,
+      createdAt: createdAt ?? DateTime.now(),
     );
   }
 
@@ -116,6 +120,13 @@ class Item {
         ownerId: UniqueId.fromUniqueString(
           (json['owner']?.toString() ?? 'default-owner').trim(),
         ),
+        createdAt: json['created_at'] != null
+            ? (json['created_at'] is int
+                  ? DateTime.fromMillisecondsSinceEpoch(
+                      json['created_at'] as int,
+                    )
+                  : DateTime.tryParse(json['created_at'].toString()))
+            : null,
       );
     } catch (e) {
       rethrow;
@@ -139,6 +150,7 @@ class Item {
       category: Category.empty(),
       completed: const Completed(false),
       ownerId: UniqueId(),
+      createdAt: DateTime.now(),
     );
   }
 }
