@@ -7,6 +7,7 @@ import '../../application/services/items_read_service.dart';
 import '../../config/injection.dart';
 import '../widgets/item_preview_widget.dart';
 import '../widgets/main_drawer.dart';
+import '../widgets/cyberpunk_styling.dart';
 import '../../domain/entities/item.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -288,7 +289,7 @@ class _HomeViewState extends State<_HomeView> {
                         GoRouter.of(context).push(routeName, extra: item);
                       },
                       child: ClipPath(
-                        clipper: const _CyberpunkPillClipper(),
+                        clipper: const CyberpunkPillClipper(),
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,
@@ -349,27 +350,4 @@ class _HomeViewState extends State<_HomeView> {
       },
     );
   }
-}
-
-class _CyberpunkPillClipper extends CustomClipper<Path> {
-  const _CyberpunkPillClipper();
-
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    const cut = 8.0;
-
-    path.moveTo(cut, 0);
-    path.lineTo(size.width, 0);
-    path.lineTo(size.width, size.height - cut);
-    path.lineTo(size.width - cut, size.height);
-    path.lineTo(0, size.height);
-    path.lineTo(0, cut);
-    path.close();
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

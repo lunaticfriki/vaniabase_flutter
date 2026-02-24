@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../widgets/cyberpunk_styling.dart';
 
 class AppTheme {
   // Brand Colors
@@ -29,5 +30,17 @@ class AppTheme {
       elevation: 0,
     ),
     drawerTheme: const DrawerThemeData(backgroundColor: _darkBackground),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: _darkBackground,
+      contentTextStyle: TextStyle(
+        color: Colors.white,
+        fontFamily: GoogleFonts.inconsolata().fontFamily,
+      ),
+      shape: CyberpunkStyling.getCutEdgeBorder(
+        borderColor: _magenta,
+        borderWidth: 1.5,
+      ),
+      behavior: SnackBarBehavior.floating,
+    ),
   );
 }

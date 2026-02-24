@@ -113,25 +113,45 @@ class DynamicListLayout extends StatelessWidget {
                 onOptionSelected(option);
               }
             },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-              decoration: isSelected
-                  ? BoxDecoration(
+            child: isSelected
+                ? ClipPath(
+                    clipper: const CyberpunkPillClipper(),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       color: Theme.of(
                         context,
                       ).colorScheme.secondary.withValues(alpha: 0.5),
-                      borderRadius: BorderRadius.circular(4),
-                    )
-                  : null,
-              child: Text(
-                option.toUpperCase(),
-                style: TextStyle(
-                  fontSize: fontSize,
-                  fontWeight: fontSize > 24 ? FontWeight.w900 : FontWeight.w600,
-                  color: isSelected ? Colors.white : Colors.white70,
-                ),
-              ),
-            ),
+                      child: Text(
+                        option.toUpperCase(),
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          fontWeight: fontSize > 24
+                              ? FontWeight.w900
+                              : FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 4,
+                      vertical: 2,
+                    ),
+                    child: Text(
+                      option.toUpperCase(),
+                      style: TextStyle(
+                        fontSize: fontSize,
+                        fontWeight: fontSize > 24
+                            ? FontWeight.w900
+                            : FontWeight.w600,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ),
           );
         }).toList(),
       ),

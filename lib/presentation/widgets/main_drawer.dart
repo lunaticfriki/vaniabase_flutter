@@ -22,7 +22,7 @@ class MainDrawer extends StatelessWidget {
             children: [
               DrawerHeader(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).scaffoldBackgroundColor,
                   border: Border(
                     bottom: BorderSide(
                       color: Theme.of(context).colorScheme.secondary,
@@ -30,13 +30,25 @@ class MainDrawer extends StatelessWidget {
                     ),
                   ),
                 ),
-                child: Text(
-                  'VANIABASE',
-                  style: TextStyle(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Theme.of(context).colorScheme.secondary
-                        : Theme.of(context).colorScheme.onPrimary,
-                    fontSize: 24,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: ShaderMask(
+                    shaderCallback: (bounds) => LinearGradient(
+                      colors: [
+                        Theme.of(context).colorScheme.primary,
+                        Theme.of(context).colorScheme.secondary,
+                        Theme.of(context).colorScheme.tertiary,
+                      ],
+                    ).createShader(bounds),
+                    child: const Text(
+                      'VANIABASE',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 2.0,
+                      ),
+                    ),
                   ),
                 ),
               ),
