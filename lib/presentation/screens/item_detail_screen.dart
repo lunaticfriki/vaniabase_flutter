@@ -189,12 +189,19 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
               left: BorderSide(color: theme.colorScheme.secondary, width: 2),
             ),
           ),
-          child: Text(
-            currentItem.category.name.value.toUpperCase(),
-            style: TextStyle(
-              color: theme.colorScheme.secondary,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 2,
+          child: InkWell(
+            onTap: () {
+              GoRouter.of(
+                context,
+              ).push('/categories', extra: currentItem.category.name.value);
+            },
+            child: Text(
+              currentItem.category.name.value.toUpperCase(),
+              style: TextStyle(
+                color: theme.colorScheme.secondary,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 2,
+              ),
             ),
           ),
         ),
