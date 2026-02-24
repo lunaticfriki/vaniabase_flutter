@@ -254,13 +254,12 @@ class ItemsRepositoryImpl implements IItemsRepository {
         },
         'completed': item.completed.value,
         'owner': item.ownerId.value,
-        // Optional: you can choose not to update created_at, but we include it if present
+
         'created_at': item.createdAt != null
             ? item.createdAt!.millisecondsSinceEpoch
             : null,
       };
 
-      // Remove nulls so we don't accidentally overwrite with nulls
       map.removeWhere((key, value) => value == null);
 
       await _dataSource.updateItem(map);

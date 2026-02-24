@@ -57,7 +57,7 @@ class UserObjectMother {
       id: UniqueId.fromUniqueString('user-123'),
       emailAddress: EmailAddress('user@example.com'),
       name: 'Test User',
-      avatar: 'https://example.com/avatar.png',
+      avatar: 'https://example.com/avatar.jpg',
       createdAt: DateTime(2023, 1, 1),
     );
   }

@@ -51,14 +51,12 @@ class FirebaseAuthRepositoryImpl implements IAuthRepository {
       final firebaseUser = userCredential.user;
 
       if (firebaseUser != null) {
-        print('✅ Google Sign-In Success: ${firebaseUser.uid}');
         try {
           final userDoc = await _firestore
               .collection('users')
               .doc(firebaseUser.uid)
               .get();
           if (!userDoc.exists) {
-            print('Creating new user document...');
             final now = DateTime.now();
             await _firestore.collection('users').doc(firebaseUser.uid).set({
               'id': firebaseUser.uid,
@@ -67,20 +65,14 @@ class FirebaseAuthRepositoryImpl implements IAuthRepository {
               'avatar': firebaseUser.photoURL ?? '',
               'created_at': now.toIso8601String(),
             });
-            print('✅ User document created successfully!');
-          } else {
-            print('✅ User document already exists.');
-          }
+          } else {}
         } catch (dbError) {
-          print('🔥 FIRESTORE USER SYNC ERROR 🔥: $dbError');
           throw Exception('Database sync failed: $dbError');
         }
       }
     } on firebase.FirebaseAuthException catch (e) {
-      print('🔥 FIREBASE AUTH ERROR: ${e.message}');
       throw Exception(e.message ?? 'Unknown authentication error');
     } catch (e) {
-      print('🔥 GENERAL SIGN IN ERROR: $e');
       throw Exception(
         'Google Sign In failed: $e. If on Web, check your Google Cloud Console "Authorized JavaScript origins" port.',
       );

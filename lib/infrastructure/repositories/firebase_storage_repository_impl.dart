@@ -33,9 +33,6 @@ class FirebaseStorageRepositoryImpl implements IStorageRepository {
     try {
       final ref = _firebaseStorage.refFromURL(coverUrl);
       await ref.delete();
-    } catch (e) {
-      print('🔥 FIRESTORE STORAGE DELETE ERROR 🔥');
-      print('Failed to delete image at $coverUrl: $e');
-    }
+    } catch (e) {}
   }
 }

@@ -26,10 +26,7 @@ class FirestoreItemsDataSource implements IItemsDataSource {
         data['id'] = doc.id;
         return data;
       }).toList();
-    } catch (e, stackTrace) {
-      print('🔥 FIRESTORE FETCH ERROR 🔥');
-      print('Error mapping items for user ${currentUser.uid}: $e');
-      print('StackTrace: $stackTrace');
+    } catch (e) {
       rethrow;
     }
   }
@@ -49,10 +46,7 @@ class FirestoreItemsDataSource implements IItemsDataSource {
       } else {
         await _firestore.collection('items').add(itemMap);
       }
-    } catch (e, stackTrace) {
-      print('🔥 FIRESTORE CREATE ERROR 🔥');
-      print('Error creating item for user ${currentUser.uid}: $e');
-      print('StackTrace: $stackTrace');
+    } catch (e) {
       rethrow;
     }
   }
@@ -72,10 +66,7 @@ class FirestoreItemsDataSource implements IItemsDataSource {
 
       itemMap['owner'] = currentUser.uid;
       await _firestore.collection('items').doc(id.toString()).update(itemMap);
-    } catch (e, stackTrace) {
-      print('🔥 FIRESTORE UPDATE ERROR 🔥');
-      print('Error updating item for user ${currentUser.uid}: $e');
-      print('StackTrace: $stackTrace');
+    } catch (e) {
       rethrow;
     }
   }
@@ -93,10 +84,7 @@ class FirestoreItemsDataSource implements IItemsDataSource {
       }
 
       await _firestore.collection('items').doc(id).delete();
-    } catch (e, stackTrace) {
-      print('🔥 FIRESTORE DELETE ERROR 🔥');
-      print('Error deleting item for user ${currentUser.uid}: $e');
-      print('StackTrace: $stackTrace');
+    } catch (e) {
       rethrow;
     }
   }

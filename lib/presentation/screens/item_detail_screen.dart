@@ -57,7 +57,6 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
       currentItem = updatedItem;
     });
 
-    // We also want to refresh the general read state so the dashboard stays up to date
     sl<IItemsReadService>().fetchAllItems(refresh: true);
     sl<IItemsReadService>().fetchLatestItems();
     sl<IItemsReadService>().fetchStats();

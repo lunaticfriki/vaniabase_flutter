@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../application/services/auth_cubit.dart';
+import '../../application/services/auth_state.dart';
 import 'cyberpunk_styling.dart';
+import 'pixel_icons.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({super.key});
@@ -15,137 +17,186 @@ class MainDrawer extends StatelessWidget {
     return Drawer(
       backgroundColor: const Color(0xFF18181B),
       shape: CyberpunkStyling.getCutEdgeBorder(rightBorderOnly: true),
-      child: Stack(
-        children: [
-          ListView(
-            padding: EdgeInsets.zero,
+      child: BlocBuilder<AuthCubit, AuthState>(
+        builder: (context, authState) {
+          final user = authState is Authenticated ? authState.user : null;
+
+          return Stack(
             children: [
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  border: Border(
-                    bottom: BorderSide(
-                      color: Theme.of(context).colorScheme.secondary,
-                      width: 2.0,
-                    ),
-                  ),
-                ),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: ShaderMask(
-                    shaderCallback: (bounds) => LinearGradient(
-                      colors: [
-                        Theme.of(context).colorScheme.primary,
-                        Theme.of(context).colorScheme.secondary,
-                        Theme.of(context).colorScheme.tertiary,
-                      ],
-                    ).createShader(bounds),
-                    child: const Text(
-                      'VANIABASE',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2.0,
+              ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  DrawerHeader(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).scaffoldBackgroundColor,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Theme.of(context).colorScheme.secondary,
+                          width: 2.0,
+                        ),
                       ),
                     ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ShaderMask(
+                          shaderCallback: (bounds) => LinearGradient(
+                            colors: [
+                              Theme.of(context).colorScheme.primary,
+                              Theme.of(context).colorScheme.secondary,
+                              Theme.of(context).colorScheme.tertiary,
+                            ],
+                          ).createShader(bounds),
+                          child: const Text(
+                            'VANIABASE',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2.0,
+                            ),
+                          ),
+                        ),
+                        if (user != null) ...[
+                          const SizedBox(height: 16),
+                          InkWell(
+                            onTap: () {
+                              context.pop();
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 32,
+                                  height: 32,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: NetworkImage(user.avatar),
+                                      fit: BoxFit.cover,
+                                      filterQuality: FilterQuality.none,
+                                    ),
+                                    color: Colors.white10,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    'HELLO, ${user.name.toUpperCase()}!',
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 1.2,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    PixelIcons.home,
+                    'Home',
+                    '/',
+                    tileColor,
+                    textColor,
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    PixelIcons.collection,
+                    'All Items',
+                    '/all-items',
+                    tileColor,
+                    textColor,
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    PixelIcons.search,
+                    'Search',
+                    '/search',
+                    tileColor,
+                    textColor,
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    PixelIcons.categories,
+                    'Categories',
+                    '/categories',
+                    tileColor,
+                    textColor,
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    PixelIcons.authors,
+                    'Authors',
+                    '/authors',
+                    tileColor,
+                    textColor,
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    PixelIcons.topics,
+                    'Topics',
+                    '/topics',
+                    tileColor,
+                    textColor,
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    PixelIcons.tags,
+                    'Tags',
+                    '/tags',
+                    tileColor,
+                    textColor,
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    PixelIcons.about,
+                    'About',
+                    '/about',
+                    tileColor,
+                    textColor,
+                  ),
+                  const Divider(),
+                  ListTile(
+                    leading: const Icon(Icons.exit_to_app),
+                    title: const Text('Logout'),
+                    onTap: () {
+                      context.pop();
+                      context.read<AuthCubit>().signOut();
+                    },
+                  ),
+                ],
+              ),
+              Positioned.fill(
+                child: IgnorePointer(
+                  child: CustomPaint(
+                    painter: _RightBevelBorderPainter(
+                      color: Theme.of(context).colorScheme.secondary,
+                      cutSize: 16.0,
+                      strokeWidth: 1.0,
+                    ),
                   ),
                 ),
               ),
-              _buildDrawerItem(
-                context,
-                Icons.home,
-                'Home',
-                '/',
-                tileColor,
-                textColor,
-              ),
-              _buildDrawerItem(
-                context,
-                Icons.list,
-                'All Items',
-                '/all-items',
-                tileColor,
-                textColor,
-              ),
-              _buildDrawerItem(
-                context,
-                Icons.search,
-                'Search',
-                '/search',
-                tileColor,
-                textColor,
-              ),
-              _buildDrawerItem(
-                context,
-                Icons.category,
-                'Categories',
-                '/categories',
-                tileColor,
-                textColor,
-              ),
-              _buildDrawerItem(
-                context,
-                Icons.person,
-                'Authors',
-                '/authors',
-                tileColor,
-                textColor,
-              ),
-              _buildDrawerItem(
-                context,
-                Icons.topic,
-                'Topics',
-                '/topics',
-                tileColor,
-                textColor,
-              ),
-              _buildDrawerItem(
-                context,
-                Icons.tag,
-                'Tags',
-                '/tags',
-                tileColor,
-                textColor,
-              ),
-              _buildDrawerItem(
-                context,
-                Icons.info,
-                'About',
-                '/about',
-                tileColor,
-                textColor,
-              ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.exit_to_app),
-                title: const Text('Logout'),
-                onTap: () {
-                  context.pop();
-                  context.read<AuthCubit>().signOut();
-                },
-              ),
             ],
-          ),
-          Positioned.fill(
-            child: IgnorePointer(
-              child: CustomPaint(
-                painter: _RightBevelBorderPainter(
-                  color: Theme.of(context).colorScheme.secondary,
-                  cutSize: 16.0,
-                  strokeWidth: 1.0,
-                ),
-              ),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 
   Widget _buildDrawerItem(
     BuildContext context,
-    IconData icon,
+    Widget icon,
     String title,
     String route,
     Color tileColor,
@@ -163,7 +214,20 @@ class MainDrawer extends StatelessWidget {
           shape: CyberpunkStyling.cutEdgeBorder,
           textColor: textColor,
           iconColor: textColor,
-          leading: Icon(icon),
+          leading: ShaderMask(
+            shaderCallback: (bounds) => LinearGradient(
+              colors: [
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.secondary,
+                Theme.of(context).colorScheme.tertiary,
+              ],
+            ).createShader(bounds),
+
+            child: IconTheme(
+              data: const IconThemeData(color: Colors.white, size: 20),
+              child: icon,
+            ),
+          ),
           title: Text(title),
           onTap: () {
             context.pop();

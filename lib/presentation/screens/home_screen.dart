@@ -216,40 +216,34 @@ class _HomeViewState extends State<_HomeView> {
   Widget _buildListsSection(BuildContext context, ItemsState state) {
     final theme = Theme.of(context);
 
-    // Compute frequencies from state.items for all pills
     Map<String, int> catCounts = {};
     Map<String, int> topicCounts = {};
     Map<String, int> tagCounts = {};
     Map<String, int> pubCounts = {};
 
     for (var item in state.items) {
-      // Categories
       final cat = item.category.name.value;
       if (cat.isNotEmpty && cat.toLowerCase() != 'unknown') {
         catCounts[cat] = (catCounts[cat] ?? 0) + 1;
       }
 
-      // Topics
       final topic = item.topic.value;
       if (topic.isNotEmpty) {
         topicCounts[topic] = (topicCounts[topic] ?? 0) + 1;
       }
 
-      // Tags
       for (var tag in item.tags) {
         if (tag.isNotEmpty) {
           tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
         }
       }
 
-      // Publishers (Editors)
       final pub = item.publisher.value;
       if (pub.isNotEmpty && pub.toLowerCase() != 'unknown') {
         pubCounts[pub] = (pubCounts[pub] ?? 0) + 1;
       }
     }
 
-    // Convert frequency maps to formatted MapEntries "Name" -> "Name (Count)" and sort them
     final categoriesList =
         state.categories
             .map((c) => c.name.value)
@@ -280,9 +274,8 @@ class _HomeViewState extends State<_HomeView> {
             .toList()
           ..sort((a, b) => a.key.compareTo(b.key));
 
-    // Get the last 5 completed items
     final completedItems = state.items.where((i) => i.completed.value).toList();
-    // Sort by timestamp (newest first)
+
     completedItems.sort(
       (a, b) => (b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
           .compareTo(a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)),
@@ -334,7 +327,7 @@ class _HomeViewState extends State<_HomeView> {
               ? publishersList
               : state.publishers.map((p) => MapEntry(p, p)).toList(),
           Colors.pinkAccent,
-          '/', // Placeholder: No '/editors' screen currently exists
+          '/',
         ),
         const SizedBox(height: 16),
         _buildListRow(
@@ -344,7 +337,7 @@ class _HomeViewState extends State<_HomeView> {
               ? last5CompletedNames
               : [const MapEntry('No items completed', 'No items completed')],
           Colors.greenAccent,
-          '/', // Placeholder
+          '/',
         ),
       ],
     );
