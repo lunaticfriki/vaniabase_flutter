@@ -249,36 +249,36 @@ class _HomeViewState extends State<_HomeView> {
       }
     }
 
-    // Convert frequency maps to formatted strings "Name (Count)" and sort them
+    // Convert frequency maps to formatted MapEntries "Name" -> "Name (Count)" and sort them
     final categoriesList =
         state.categories
             .map((c) => c.name.value)
             .where((name) => catCounts.containsKey(name))
-            .map((name) => '$name (${catCounts[name]})')
+            .map((name) => MapEntry(name, '$name (${catCounts[name]})'))
             .toList()
-          ..sort();
+          ..sort((a, b) => a.key.compareTo(b.key));
 
     final topicsList =
         state.topics
             .map((t) => t.value)
             .where((val) => topicCounts.containsKey(val))
-            .map((val) => '$val (${topicCounts[val]})')
+            .map((val) => MapEntry(val, '$val (${topicCounts[val]})'))
             .toList()
-          ..sort();
+          ..sort((a, b) => a.key.compareTo(b.key));
 
     final tagsList =
         state.tags
             .where((tag) => tagCounts.containsKey(tag))
-            .map((tag) => '$tag (${tagCounts[tag]})')
+            .map((tag) => MapEntry(tag, '$tag (${tagCounts[tag]})'))
             .toList()
-          ..sort();
+          ..sort((a, b) => a.key.compareTo(b.key));
 
     final publishersList =
         state.publishers
             .where((pub) => pubCounts.containsKey(pub))
-            .map((pub) => '$pub (${pubCounts[pub]})')
+            .map((pub) => MapEntry(pub, '$pub (${pubCounts[pub]})'))
             .toList()
-          ..sort();
+          ..sort((a, b) => a.key.compareTo(b.key));
 
     // Get the last 5 completed items
     final completedItems = state.items.where((i) => i.completed.value).toList();
@@ -289,7 +289,7 @@ class _HomeViewState extends State<_HomeView> {
     );
     final last5CompletedNames = completedItems
         .take(5)
-        .map((i) => i.title.value)
+        .map((i) => MapEntry(i.title.value, i.title.value))
         .toList();
 
     return Column(
@@ -300,7 +300,9 @@ class _HomeViewState extends State<_HomeView> {
           'Categories',
           categoriesList.isNotEmpty
               ? categoriesList
-              : state.categories.map((c) => c.name.value).toList(),
+              : state.categories
+                    .map((c) => MapEntry(c.name.value, c.name.value))
+                    .toList(),
           theme.colorScheme.secondary,
           '/categories',
         ),
@@ -310,7 +312,7 @@ class _HomeViewState extends State<_HomeView> {
           'Topics',
           topicsList.isNotEmpty
               ? topicsList
-              : state.topics.map((t) => t.value).toList(),
+              : state.topics.map((t) => MapEntry(t.value, t.value)).toList(),
           Colors.purpleAccent,
           '/topics',
         ),
@@ -318,7 +320,9 @@ class _HomeViewState extends State<_HomeView> {
         _buildListRow(
           context,
           'Tags',
-          tagsList.isNotEmpty ? tagsList : state.tags,
+          tagsList.isNotEmpty
+              ? tagsList
+              : state.tags.map((t) => MapEntry(t, t)).toList(),
           Colors.cyan,
           '/tags',
         ),
@@ -326,7 +330,9 @@ class _HomeViewState extends State<_HomeView> {
         _buildListRow(
           context,
           'Editors',
-          publishersList.isNotEmpty ? publishersList : state.publishers,
+          publishersList.isNotEmpty
+              ? publishersList
+              : state.publishers.map((p) => MapEntry(p, p)).toList(),
           Colors.pinkAccent,
           '/', // Placeholder: No '/editors' screen currently exists
         ),
@@ -336,7 +342,7 @@ class _HomeViewState extends State<_HomeView> {
           'Completed (${state.completedItems})',
           last5CompletedNames.isNotEmpty
               ? last5CompletedNames
-              : ['No items completed'],
+              : [const MapEntry('No items completed', 'No items completed')],
           Colors.greenAccent,
           '/', // Placeholder
         ),
@@ -347,7 +353,7 @@ class _HomeViewState extends State<_HomeView> {
   Widget _buildListRow(
     BuildContext context,
     String title,
-    List<String> items,
+    List<MapEntry<String, String>> items,
     Color accentColor,
     String routeName,
   ) {
@@ -387,7 +393,7 @@ class _HomeViewState extends State<_HomeView> {
                   children: items.map((item) {
                     return InkWell(
                       onTap: () {
-                        GoRouter.of(context).push(routeName, extra: item);
+                        GoRouter.of(context).push(routeName, extra: item.key);
                       },
                       child: ClipPath(
                         clipper: const CyberpunkPillClipper(),
@@ -403,7 +409,7 @@ class _HomeViewState extends State<_HomeView> {
                             ),
                           ),
                           child: Text(
-                            item,
+                            item.value,
                             style: const TextStyle(color: Colors.white70),
                           ),
                         ),
