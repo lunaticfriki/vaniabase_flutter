@@ -6,6 +6,7 @@ import '../../application/services/items_read_service.dart';
 import '../../config/injection.dart';
 import '../widgets/dynamic_list_layout.dart';
 import '../widgets/main_drawer.dart';
+import '../widgets/cyberpunk_fab.dart';
 
 class CategoriesScreen extends StatelessWidget {
   final String? initialCategory;
@@ -29,6 +30,7 @@ class _CategoriesView extends StatefulWidget {
 }
 
 class _CategoriesViewState extends State<_CategoriesView> {
+  final ScrollController _scrollController = ScrollController();
   String? _selectedCategory;
 
   @override
@@ -39,10 +41,17 @@ class _CategoriesViewState extends State<_CategoriesView> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Categories')),
       drawer: const MainDrawer(),
+      floatingActionButton: CyberpunkFab(scrollController: _scrollController),
       body: BlocBuilder<ItemsCubit, ItemsState>(
         builder: (context, state) {
           if (state.status == ItemsStatus.initial ||
@@ -77,6 +86,7 @@ class _CategoriesViewState extends State<_CategoriesView> {
                     .toList();
 
           return SingleChildScrollView(
+            controller: _scrollController,
             padding: const EdgeInsets.all(24.0),
             child: DynamicListLayout(
               title: 'CATEGORIES',

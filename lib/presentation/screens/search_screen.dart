@@ -6,6 +6,7 @@ import '../../application/services/items_read_service.dart';
 import '../../config/injection.dart';
 import '../widgets/item_preview_widget.dart';
 import '../widgets/main_drawer.dart';
+import '../widgets/cyberpunk_fab.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({super.key});
@@ -27,6 +28,7 @@ class _SearchView extends StatefulWidget {
 }
 
 class _SearchViewState extends State<_SearchView> {
+  final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
@@ -38,6 +40,7 @@ class _SearchViewState extends State<_SearchView> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     _searchController.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -48,6 +51,7 @@ class _SearchViewState extends State<_SearchView> {
     return Scaffold(
       appBar: AppBar(title: const Text('Search')),
       drawer: const MainDrawer(),
+      floatingActionButton: CyberpunkFab(scrollController: _scrollController),
       body: Column(
         children: [
           Padding(
@@ -90,6 +94,7 @@ class _SearchViewState extends State<_SearchView> {
                                   : 2;
 
                               return GridView.builder(
+                                controller: _scrollController,
                                 padding: const EdgeInsets.all(16.0),
                                 gridDelegate:
                                     SliverGridDelegateWithFixedCrossAxisCount(

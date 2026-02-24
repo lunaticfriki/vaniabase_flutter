@@ -6,8 +6,9 @@ import '../../application/services/items_state.dart';
 import '../../application/services/items_read_service.dart';
 import '../../config/injection.dart';
 import '../widgets/item_preview_widget.dart';
-import '../widgets/main_drawer.dart';
 import '../widgets/cyberpunk_styling.dart';
+import '../widgets/main_drawer.dart';
+import '../widgets/cyberpunk_fab.dart';
 import '../../domain/entities/item.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -30,6 +31,8 @@ class _HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<_HomeView> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -42,23 +45,17 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Dashboard')),
       drawer: const MainDrawer(),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => GoRouter.of(context).push('/item/new'),
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text(
-          'ADD NEW ITEM',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
-          ),
-        ),
-      ),
+      floatingActionButton: CyberpunkFab(scrollController: _scrollController),
       body: BlocBuilder<ItemsCubit, ItemsState>(
         builder: (context, state) {
           if (state.status == ItemsStatus.initial ||
@@ -70,6 +67,7 @@ class _HomeViewState extends State<_HomeView> {
           }
 
           return SingleChildScrollView(
+            controller: _scrollController,
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

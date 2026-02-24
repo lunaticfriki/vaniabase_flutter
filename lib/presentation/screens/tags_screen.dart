@@ -6,6 +6,7 @@ import '../../application/services/items_read_service.dart';
 import '../../config/injection.dart';
 import '../widgets/dynamic_list_layout.dart';
 import '../widgets/main_drawer.dart';
+import '../widgets/cyberpunk_fab.dart';
 
 class TagsScreen extends StatelessWidget {
   final String? initialTag;
@@ -29,6 +30,7 @@ class _TagsView extends StatefulWidget {
 }
 
 class _TagsViewState extends State<_TagsView> {
+  final ScrollController _scrollController = ScrollController();
   String? _selectedTag;
 
   @override
@@ -39,10 +41,17 @@ class _TagsViewState extends State<_TagsView> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Tags')),
       drawer: const MainDrawer(),
+      floatingActionButton: CyberpunkFab(scrollController: _scrollController),
       body: BlocBuilder<ItemsCubit, ItemsState>(
         builder: (context, state) {
           if (state.status == ItemsStatus.initial ||
@@ -79,6 +88,7 @@ class _TagsViewState extends State<_TagsView> {
                     .toList();
 
           return SingleChildScrollView(
+            controller: _scrollController,
             padding: const EdgeInsets.all(24.0),
             child: DynamicListLayout(
               title: 'TAGS',

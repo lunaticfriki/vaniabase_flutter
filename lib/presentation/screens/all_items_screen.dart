@@ -6,6 +6,7 @@ import '../../application/services/items_read_service.dart';
 import '../../config/injection.dart';
 import '../widgets/item_preview_widget.dart';
 import '../widgets/main_drawer.dart';
+import '../widgets/cyberpunk_fab.dart';
 
 class AllItemsScreen extends StatelessWidget {
   const AllItemsScreen({super.key});
@@ -60,6 +61,7 @@ class _AllItemsViewState extends State<_AllItemsView> {
     return Scaffold(
       appBar: AppBar(title: const Text('All Items')),
       drawer: const MainDrawer(),
+      floatingActionButton: CyberpunkFab(scrollController: _scrollController),
       body: BlocBuilder<ItemsCubit, ItemsState>(
         builder: (context, state) {
           return switch (state.status) {
