@@ -42,6 +42,8 @@ class _HomeViewState extends State<_HomeView> {
     readService.fetchAuthors();
     readService.fetchTopics();
     readService.fetchTags();
+    readService.fetchPublishers();
+    readService.fetchStats();
   }
 
   @override
@@ -137,10 +139,18 @@ class _HomeViewState extends State<_HomeView> {
 
   Widget _buildStatsSection(BuildContext context, ItemsState state) {
     final theme = Theme.of(context);
+
     return Wrap(
       spacing: 16,
       runSpacing: 16,
       children: [
+        _buildStatCard(context, 'TOTAL', state.totalItems, Colors.white),
+        _buildStatCard(
+          context,
+          'COMPLETED',
+          state.completedItems,
+          Colors.greenAccent,
+        ),
         _buildStatCard(
           context,
           'CATEGORIES',
@@ -148,6 +158,12 @@ class _HomeViewState extends State<_HomeView> {
           theme.colorScheme.secondary,
         ),
         _buildStatCard(context, 'AUTHORS', state.authors.length, Colors.orange),
+        _buildStatCard(
+          context,
+          'EDITORS',
+          state.publishers.length,
+          Colors.pinkAccent,
+        ),
         _buildStatCard(
           context,
           'TOPICS',
@@ -176,18 +192,11 @@ class _HomeViewState extends State<_HomeView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(
-              colors: [Color(0xFFFF00FF), Color(0xFFFFFF00)],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ).createShader(bounds),
-            child: Text(
-              value.toString(),
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w900,
-                color: Colors.white,
-              ),
+          Text(
+            value.toString(),
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w900,
+              color: color,
             ),
           ),
           const SizedBox(height: 8),
@@ -206,6 +215,7 @@ class _HomeViewState extends State<_HomeView> {
 
   Widget _buildListsSection(BuildContext context, ItemsState state) {
     final theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -231,6 +241,22 @@ class _HomeViewState extends State<_HomeView> {
           state.tags.toSet().toList(),
           Colors.cyan,
           '/tags',
+        ),
+        const SizedBox(height: 16),
+        _buildListRow(
+          context,
+          'Editors',
+          state.publishers,
+          Colors.pinkAccent,
+          '/', // Placeholder: No '/editors' screen currently exists
+        ),
+        const SizedBox(height: 16),
+        _buildListRow(
+          context,
+          'Completed',
+          ['Yes (Total: ${state.completedItems})'],
+          Colors.greenAccent,
+          '/', // Placeholder
         ),
       ],
     );

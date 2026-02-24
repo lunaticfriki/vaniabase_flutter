@@ -16,6 +16,8 @@ abstract class IItemsRepository {
   Future<(ItemFailure?, List<Author>?)> getAuthors();
   Future<(ItemFailure?, List<Topic>?)> getTopics();
   Future<(ItemFailure?, List<String>?)> getTags();
+  Future<(ItemFailure?, List<String>?)> getPublishers();
+  Future<(ItemFailure?, int, int)> getStats();
   Future<ItemFailure?> createItem(Item item);
   Future<ItemFailure?> updateItem(Item item);
   Future<ItemFailure?> deleteItem(UniqueId id);

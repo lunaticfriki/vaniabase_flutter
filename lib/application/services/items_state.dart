@@ -14,6 +14,9 @@ class ItemsState extends Equatable {
   final List<Author> authors;
   final List<Topic> topics;
   final List<String> tags;
+  final List<String> publishers;
+  final int totalItems;
+  final int completedItems;
   final String? errorMessage;
   final bool hasReachedMax;
 
@@ -26,6 +29,9 @@ class ItemsState extends Equatable {
     this.authors = const [],
     this.topics = const [],
     this.tags = const [],
+    this.publishers = const [],
+    this.totalItems = 0,
+    this.completedItems = 0,
     this.errorMessage,
     this.hasReachedMax = false,
   });
@@ -39,6 +45,9 @@ class ItemsState extends Equatable {
     List<Author>? authors,
     List<Topic>? topics,
     List<String>? tags,
+    List<String>? publishers,
+    int? totalItems,
+    int? completedItems,
     String? errorMessage,
     bool? hasReachedMax,
   }) {
@@ -51,6 +60,9 @@ class ItemsState extends Equatable {
       authors: authors ?? this.authors,
       topics: topics ?? this.topics,
       tags: tags ?? this.tags,
+      publishers: publishers ?? this.publishers,
+      totalItems: totalItems ?? this.totalItems,
+      completedItems: completedItems ?? this.completedItems,
       errorMessage: errorMessage ?? this.errorMessage,
       hasReachedMax: hasReachedMax ?? this.hasReachedMax,
     );
@@ -66,6 +78,9 @@ class ItemsState extends Equatable {
     authors,
     topics,
     tags,
+    publishers,
+    totalItems,
+    completedItems,
     errorMessage,
     hasReachedMax,
   ];

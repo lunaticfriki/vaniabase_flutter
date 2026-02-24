@@ -11,6 +11,8 @@ abstract class IItemsReadService {
   Future<void> fetchAuthors();
   Future<void> fetchTopics();
   Future<void> fetchTags();
+  Future<void> fetchPublishers();
+  Future<void> fetchStats();
 }
 
 class ItemsReadService implements IItemsReadService {
@@ -128,6 +130,28 @@ class ItemsReadService implements IItemsReadService {
       _cubit.emitError(failure.message);
     } else {
       _cubit.updateTags(items ?? []);
+    }
+  }
+
+  @override
+  Future<void> fetchPublishers() async {
+    _cubit.emitLoading();
+    final (failure, items) = await _repository.getPublishers();
+    if (failure != null) {
+      _cubit.emitError(failure.message);
+    } else {
+      _cubit.updatePublishers(items ?? []);
+    }
+  }
+
+  @override
+  Future<void> fetchStats() async {
+    _cubit.emitLoading();
+    final (failure, total, completed) = await _repository.getStats();
+    if (failure != null) {
+      _cubit.emitError(failure.message);
+    } else {
+      _cubit.updateStats(total, completed);
     }
   }
 }

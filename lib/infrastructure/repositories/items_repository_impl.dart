@@ -16,7 +16,12 @@ class ItemsRepositoryImpl implements IItemsRepository {
     try {
       final rawData = await _dataSource.fetchItems();
       final items = rawData.map((e) => Item.fromJson(e)).toList();
-      return (null, items);
+      final sortedItems = items.reversed.toList();
+      sortedItems.sort(
+        (a, b) => (b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
+            .compareTo(a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)),
+      );
+      return (null, sortedItems);
     } catch (e) {
       return (ItemUnexpectedFailure(e.toString()), null);
     }
@@ -30,7 +35,12 @@ class ItemsRepositoryImpl implements IItemsRepository {
     try {
       final rawData = await _dataSource.fetchItems();
       final items = rawData.map((e) => Item.fromJson(e)).toList();
-      final paginatedItems = items.skip(offset).take(limit).toList();
+      final sortedItems = items.reversed.toList();
+      sortedItems.sort(
+        (a, b) => (b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
+            .compareTo(a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)),
+      );
+      final paginatedItems = sortedItems.skip(offset).take(limit).toList();
       return (null, paginatedItems);
     } catch (e) {
       return (ItemUnexpectedFailure(e.toString()), null);
@@ -42,11 +52,12 @@ class ItemsRepositoryImpl implements IItemsRepository {
     try {
       final rawData = await _dataSource.fetchItems();
       final items = rawData.map((e) => Item.fromJson(e)).toList();
-      items.sort(
+      final sortedItems = items.reversed.toList();
+      sortedItems.sort(
         (a, b) => (b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
             .compareTo(a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)),
       );
-      final latest = items.take(count).toList();
+      final latest = sortedItems.take(count).toList();
       return (null, latest);
     } catch (e) {
       return (ItemUnexpectedFailure(e.toString()), null);
@@ -58,8 +69,14 @@ class ItemsRepositoryImpl implements IItemsRepository {
     try {
       final rawData = await _dataSource.fetchItems();
       final items = rawData.map((e) => Item.fromJson(e)).toList();
+      final sortedItems = items.reversed.toList();
+      sortedItems.sort(
+        (a, b) => (b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
+            .compareTo(a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)),
+      );
+
       final lowercaseQuery = query.toLowerCase();
-      final searchResults = items.where((item) {
+      final searchResults = sortedItems.where((item) {
         return item.title.value.toLowerCase().contains(lowercaseQuery) ||
             item.author.value.toLowerCase().contains(lowercaseQuery) ||
             item.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery));
@@ -147,6 +164,39 @@ class ItemsRepositoryImpl implements IItemsRepository {
       return (null, tagsSet.toList());
     } catch (e) {
       return (ItemUnexpectedFailure(e.toString()), null);
+    }
+  }
+
+  @override
+  Future<(ItemFailure?, List<String>?)> getPublishers() async {
+    try {
+      final rawData = await _dataSource.fetchItems();
+      final items = rawData.map((e) => Item.fromJson(e)).toList();
+
+      final publisherSet = <String>{};
+      for (var item in items) {
+        final pubStr = item.publisher.value;
+        if (pubStr.isNotEmpty && pubStr.toLowerCase() != 'unknown') {
+          publisherSet.add(pubStr);
+        }
+      }
+      return (null, publisherSet.toList()..sort());
+    } catch (e) {
+      return (ItemUnexpectedFailure(e.toString()), null);
+    }
+  }
+
+  @override
+  Future<(ItemFailure?, int, int)> getStats() async {
+    try {
+      final rawData = await _dataSource.fetchItems();
+      final items = rawData.map((e) => Item.fromJson(e)).toList();
+
+      final total = items.length;
+      final completed = items.where((i) => i.completed.value).length;
+      return (null, total, completed);
+    } catch (e) {
+      return (ItemUnexpectedFailure(e.toString()), 0, 0);
     }
   }
 

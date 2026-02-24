@@ -51,6 +51,20 @@ class ItemsCubit extends Cubit<ItemsState> {
     emit(state.copyWith(status: ItemsStatus.success, tags: tags));
   }
 
+  void updatePublishers(List<String> publishers) {
+    emit(state.copyWith(status: ItemsStatus.success, publishers: publishers));
+  }
+
+  void updateStats(int totalItems, int completedItems) {
+    emit(
+      state.copyWith(
+        status: ItemsStatus.success,
+        totalItems: totalItems,
+        completedItems: completedItems,
+      ),
+    );
+  }
+
   void clear() {
     emit(const ItemsState());
   }
