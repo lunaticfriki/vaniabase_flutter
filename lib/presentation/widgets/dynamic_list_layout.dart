@@ -26,13 +26,9 @@ class DynamicListLayout extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Title
         ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
-            colors: [
-              Color(0xFFFF00FF),
-              Color(0xFFFFFF00),
-            ], // brand-magenta to brand-yellow
+            colors: [Color(0xFFFF00FF), Color(0xFFFFFF00)],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ).createShader(bounds),
@@ -40,15 +36,14 @@ class DynamicListLayout extends StatelessWidget {
             title.toUpperCase(),
             style: Theme.of(context).textTheme.displayLarge?.copyWith(
               fontWeight: FontWeight.w900,
-              color: Colors.white, // Color is masked by ShaderMask
+              color: Colors.white,
               height: 1.1,
-              letterSpacing: -2.0, // tracking-tighter
+              letterSpacing: -2.0,
             ),
           ),
         ),
         const SizedBox(height: 32),
 
-        // Layout
         LayoutBuilder(
           builder: (context, constraints) {
             if (constraints.maxWidth > 800) {
@@ -175,7 +170,6 @@ class DynamicListLayout extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -211,7 +205,6 @@ class DynamicListLayout extends StatelessWidget {
         ),
         const SizedBox(height: 24),
 
-        // Grid
         if (filteredItems.isEmpty)
           Container(
             width: double.infinity,

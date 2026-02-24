@@ -3,12 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import '../widgets/cyberpunk_styling.dart';
 
 class AppTheme {
-  // Brand Colors
   static const Color _violet = Color(0xFF2E004F);
   static const Color _magenta = Color(0xFFFF00FF);
   static const Color _yellow = Color(0xFFFFFF00);
 
-  // Background Colors
   static const Color _darkBackground = Color(0xFF242424);
   static final ThemeData themeData = ThemeData(
     useMaterial3: true,

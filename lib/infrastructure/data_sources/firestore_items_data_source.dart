@@ -43,9 +43,6 @@ class FirestoreItemsDataSource implements IItemsDataSource {
 
     try {
       itemMap['owner'] = currentUser.uid;
-      // Do not generate the ID localy, let Firestore do it, but if it has one, keep it as document name?
-      // Since item creation in TS seems to use randomUUID, let's just let firestore generate it via .add()
-      // Wait, let me check what the UI will pass in.
       final id = itemMap['id'];
       if (id != null && id.toString().isNotEmpty) {
         await _firestore.collection('items').doc(id.toString()).set(itemMap);

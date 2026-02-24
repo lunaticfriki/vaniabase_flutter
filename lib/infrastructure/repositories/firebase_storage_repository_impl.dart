@@ -19,9 +19,7 @@ class FirebaseStorageRepositoryImpl implements IStorageRepository {
 
     final uploadTask = await ref.putData(
       fileBytes,
-      SettableMetadata(
-        contentType: 'image/jpeg',
-      ), // Could be dynamic, but jpeg/png works standard
+      SettableMetadata(contentType: 'image/jpeg'),
     );
 
     final downloadUrl = await uploadTask.ref.getDownloadURL();
@@ -38,7 +36,6 @@ class FirebaseStorageRepositoryImpl implements IStorageRepository {
     } catch (e) {
       print('🔥 FIRESTORE STORAGE DELETE ERROR 🔥');
       print('Failed to delete image at $coverUrl: $e');
-      // We don't rethrow here so the main item deletion can still proceed even if image deletion fails.
     }
   }
 }

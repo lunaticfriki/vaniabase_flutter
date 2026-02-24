@@ -101,7 +101,6 @@ class _ItemFormWidgetState extends State<ItemFormWidget> {
           ),
           const SizedBox(height: 24),
 
-          // Description
           _buildTextField(
             'DESCRIPTION',
             'description',
@@ -110,7 +109,6 @@ class _ItemFormWidgetState extends State<ItemFormWidget> {
           ),
           const SizedBox(height: 24),
 
-          // Row 3: Category, Year, Format
           LayoutBuilder(
             builder: (context, constraints) {
               if (constraints.maxWidth > 800) {
@@ -147,7 +145,6 @@ class _ItemFormWidgetState extends State<ItemFormWidget> {
           ),
           const SizedBox(height: 24),
 
-          // Row 4: Publisher, Language, Reference
           LayoutBuilder(
             builder: (context, constraints) {
               if (constraints.maxWidth > 800) {
@@ -174,7 +171,6 @@ class _ItemFormWidgetState extends State<ItemFormWidget> {
           ),
           const SizedBox(height: 24),
 
-          // Row 5: Tags and Topic
           LayoutBuilder(
             builder: (context, constraints) {
               if (constraints.maxWidth > 600) {
@@ -197,11 +193,9 @@ class _ItemFormWidgetState extends State<ItemFormWidget> {
           ),
           const SizedBox(height: 24),
 
-          // Cover Image
           _buildCoverField(),
           const SizedBox(height: 24),
 
-          // Mark Completed Button
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(
@@ -240,7 +234,6 @@ class _ItemFormWidgetState extends State<ItemFormWidget> {
           ),
           const SizedBox(height: 32),
 
-          // Submit Button
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
@@ -302,7 +295,7 @@ class _ItemFormWidgetState extends State<ItemFormWidget> {
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             filled: true,
-            fillColor: const Color(0xFF18181B), // zinc-900
+            fillColor: const Color(0xFF18181B),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(4),
               borderSide: BorderSide(
@@ -336,7 +329,6 @@ class _ItemFormWidgetState extends State<ItemFormWidget> {
     );
   }
 
-  // Tags array field wrapper around the exact same mapping
   Widget _buildTagsField() {
     String initialStr = '';
     if (_formData['tags'] is List) {
@@ -458,7 +450,7 @@ class _ItemFormWidgetState extends State<ItemFormWidget> {
             const SizedBox(width: 16),
             if (widget.onUploadCover != null)
               SizedBox(
-                height: 56, // matches TextFormField default height roughly
+                height: 56,
                 child: OutlinedButton.icon(
                   onPressed: _isUploading
                       ? null

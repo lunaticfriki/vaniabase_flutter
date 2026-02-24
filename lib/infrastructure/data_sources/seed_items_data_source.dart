@@ -22,19 +22,16 @@ class SeedItemsDataSource implements IItemsDataSource {
 
   @override
   Future<void> createItem(Map<String, dynamic> itemMap) async {
-    // No-op for seed data
     return;
   }
 
   @override
   Future<void> updateItem(Map<String, dynamic> itemMap) async {
-    // No-op for seed data
     return;
   }
 
   @override
   Future<void> deleteItem(String id) async {
-    // No-op for seed data
     return;
   }
 }

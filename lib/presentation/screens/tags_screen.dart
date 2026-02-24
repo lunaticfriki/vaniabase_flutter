@@ -35,7 +35,6 @@ class _TagsViewState extends State<_TagsView> {
   void initState() {
     super.initState();
     _selectedTag = widget.initialTag?.toLowerCase();
-    // We fetch all items because we need to calculate counts from them
     sl<IItemsReadService>().fetchAllItems();
   }
 
@@ -69,7 +68,6 @@ class _TagsViewState extends State<_TagsView> {
 
           final availableTags = mapCounts.keys.toList()..sort();
 
-          // Filter items
           final filteredItems = _selectedTag == null
               ? state.items
               : state.items

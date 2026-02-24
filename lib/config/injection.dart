@@ -30,23 +30,19 @@ Future<void> init() async {
     () => ItemsWriteService(sl(), sl(), sl()),
   );
 
-  // Firebase
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
   sl.registerLazySingleton(() => FirebaseStorage.instance);
 
-  // Auth
   sl.registerLazySingleton<IAuthRepository>(
     () => FirebaseAuthRepositoryImpl(sl(), sl()),
   );
 
-  // Storage
   sl.registerLazySingleton<IStorageRepository>(
     () => FirebaseStorageRepositoryImpl(sl()),
   );
   sl.registerLazySingleton<AuthCubit>(() => AuthCubit(sl()));
 
-  // Items Data Source (Replacing Seed with Firestore)
   sl.registerLazySingleton<IItemsDataSource>(
     () => FirestoreItemsDataSource(sl(), sl()),
   );

@@ -14,8 +14,6 @@ class FirebaseAuthRepositoryImpl implements IAuthRepository {
   late final GoogleSignIn _googleSignIn;
 
   FirebaseAuthRepositoryImpl(this._firebaseAuth, this._firestore) {
-    // For Flutter Web, you must pass the clientId derived from Google Cloud Console.
-    // For Android/iOS, it will automatically use the google-services.json/plist files.
     _googleSignIn = GoogleSignIn(
       clientId: kIsWeb ? dotenv.env['GOOGLE_SIGN_IN_WEB_CLIENT_ID'] : null,
     );

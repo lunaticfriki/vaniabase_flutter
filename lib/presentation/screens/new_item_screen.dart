@@ -69,7 +69,6 @@ class _NewItemView extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Item created successfully!')),
           );
-          // Return to home page after success
           context.go('/');
         } else if (state is ItemsWriteFailure) {
           ScaffoldMessenger.of(context).showSnackBar(

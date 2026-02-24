@@ -44,7 +44,6 @@ class ItemsWriteService implements IItemsWriteService {
   Future<void> deleteItem(Item item) async {
     _cubit.emitLoading();
 
-    // Attempt to delete cover image first
     if (item.cover.value.isNotEmpty) {
       await _storageRepository.deleteItemCover(item.cover.value);
     }

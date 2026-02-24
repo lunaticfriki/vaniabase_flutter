@@ -44,7 +44,7 @@ class _EditItemView extends StatelessWidget {
 
   void _handleUpdate(BuildContext context, Map<String, dynamic> formData) {
     final updatedItem = Item.create(
-      id: item.id, // KEEP EXISTING ID
+      id: item.id,
       title: Title(formData['title']?.toString() ?? ''),
       author: Author(formData['author']?.toString() ?? ''),
       publisher: Publisher(formData['publisher']?.toString() ?? ''),
@@ -63,7 +63,7 @@ class _EditItemView extends StatelessWidget {
         name: Name(formData['category']?.toString() ?? 'Unknown'),
       ),
       completed: Completed(formData['completed'] ?? false),
-      ownerId: item.ownerId, // KEEP EXISTING OWNER ID
+      ownerId: item.ownerId,
     );
 
     sl<IItemsWriteService>().updateItem(updatedItem);
@@ -77,7 +77,6 @@ class _EditItemView extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Item updated successfully!')),
           );
-          // Return to home page after success
           context.go('/');
         } else if (state is ItemsWriteFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -136,8 +135,7 @@ class _EditItemView extends StatelessWidget {
                       'year': item.year.value.toString(),
                       'publisher': item.publisher.value,
                       'language': item.language.value,
-                      'category': item.category.name.value
-                          .toLowerCase(), // Maps to the dropdown values (books, video, etc)
+                      'category': item.category.name.value.toLowerCase(),
                       'reference': item.reference.value,
                     };
 

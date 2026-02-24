@@ -58,7 +58,6 @@ class _AuthorsViewState extends State<_AuthorsView> {
             return const Center(child: Text('No items found.'));
           }
 
-          // Calculate occurrences
           final mapCounts = <String, int>{};
           for (final item in state.items) {
             final lowerAuthor = item.author.value.toLowerCase();
@@ -67,7 +66,6 @@ class _AuthorsViewState extends State<_AuthorsView> {
 
           final availableAuthors = mapCounts.keys.toList()..sort();
 
-          // Filter items
           final filteredItems = _selectedAuthor == null
               ? state.items
               : state.items

@@ -74,19 +74,15 @@ class _HomeViewState extends State<_HomeView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Welcome Section
                 _buildWelcomeSection(context),
                 const SizedBox(height: 32),
 
-                // Stats Section
                 _buildStatsSection(context, state),
                 const SizedBox(height: 32),
 
-                // Lists Section
                 _buildListsSection(context, state),
                 const SizedBox(height: 32),
 
-                // Latest Items Section
                 ShaderMask(
                   shaderCallback: (bounds) => const LinearGradient(
                     colors: [Color(0xFFFF00FF), Color(0xFFFFFF00)],
@@ -103,7 +99,7 @@ class _HomeViewState extends State<_HomeView> {
                 ),
                 const SizedBox(height: 16),
                 _buildLatestItemsGrid(context, state.latestItems),
-                const SizedBox(height: 32), // Bottom padding
+                const SizedBox(height: 32),
               ],
             ),
           );
@@ -285,7 +281,6 @@ class _HomeViewState extends State<_HomeView> {
                   children: items.map((item) {
                     return InkWell(
                       onTap: () {
-                        // Pass the item name as extra so the target screen can use it
                         GoRouter.of(context).push(routeName, extra: item);
                       },
                       child: ClipPath(
@@ -325,7 +320,6 @@ class _HomeViewState extends State<_HomeView> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Decide cross axis count based on screen width
         int crossAxisCount = constraints.maxWidth > 800
             ? 5
             : constraints.maxWidth > 600
@@ -333,12 +327,11 @@ class _HomeViewState extends State<_HomeView> {
             : 2;
 
         return GridView.builder(
-          physics:
-              const NeverScrollableScrollPhysics(), // Managed by SingleChildScrollView
+          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: crossAxisCount,
-            childAspectRatio: 0.46, // Adjusted to fit details without overflow
+            childAspectRatio: 0.46,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
           ),

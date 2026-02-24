@@ -1,5 +1,3 @@
-// lib/domain/entities/item_failure.dart
-
 abstract class ItemFailure {
   final String message;
   const ItemFailure(this.message);

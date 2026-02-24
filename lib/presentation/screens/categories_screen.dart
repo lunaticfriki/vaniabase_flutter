@@ -58,7 +58,6 @@ class _CategoriesViewState extends State<_CategoriesView> {
             return const Center(child: Text('No items found.'));
           }
 
-          // Calculate occurrences
           final mapCounts = <String, int>{};
           for (final item in state.items) {
             final lowerCategory = item.category.name.value.toLowerCase();
@@ -67,7 +66,6 @@ class _CategoriesViewState extends State<_CategoriesView> {
 
           final availableCategories = mapCounts.keys.toList()..sort();
 
-          // Filter items
           final filteredItems = _selectedCategory == null
               ? state.items
               : state.items

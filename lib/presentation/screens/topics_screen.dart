@@ -58,7 +58,6 @@ class _TopicsViewState extends State<_TopicsView> {
             return const Center(child: Text('No items found.'));
           }
 
-          // Calculate occurrences
           final mapCounts = <String, int>{};
           for (final item in state.items) {
             final lowerTopic = item.topic.value.toLowerCase();
@@ -67,7 +66,6 @@ class _TopicsViewState extends State<_TopicsView> {
 
           final availableTopics = mapCounts.keys.toList()..sort();
 
-          // Filter items
           final filteredItems = _selectedTopic == null
               ? state.items
               : state.items

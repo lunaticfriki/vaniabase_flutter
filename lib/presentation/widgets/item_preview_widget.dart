@@ -25,21 +25,18 @@ class ItemPreviewWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Cover Image Area
             AspectRatio(aspectRatio: 2 / 3, child: _buildCover()),
 
-            // Details Area
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Category
                     Text(
                       item.category.name.value.toUpperCase(),
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.secondary, // Magenta
+                        color: theme.colorScheme.secondary,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.5,
                       ),
@@ -48,7 +45,6 @@ class ItemPreviewWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
 
-                    // Title
                     Expanded(
                       child: Text(
                         item.title.value,
@@ -62,7 +58,6 @@ class ItemPreviewWidget extends StatelessWidget {
                       ),
                     ),
 
-                    // Divider & Author
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(

@@ -127,7 +127,6 @@ class MainDrawer extends StatelessWidget {
               ),
             ],
           ),
-          // Custom drawn right edge border to complement the cut bevel shape.
           Positioned.fill(
             child: IgnorePointer(
               child: CustomPaint(
@@ -167,7 +166,7 @@ class MainDrawer extends StatelessWidget {
           leading: Icon(icon),
           title: Text(title),
           onTap: () {
-            context.pop(); // Close the drawer
+            context.pop();
             context.go(route);
           },
         ),
@@ -195,11 +194,8 @@ class _RightBevelBorderPainter extends CustomPainter {
       ..strokeWidth = strokeWidth;
 
     final path = Path();
-    // Start drawing from top right corner inwards
     path.moveTo(size.width, 0);
-    // Line down to where the cut starts
     path.lineTo(size.width, size.height - cutSize);
-    // Diagonal slope line towards bottom edge
     path.lineTo(size.width - cutSize, size.height);
 
     canvas.drawPath(path, paint);

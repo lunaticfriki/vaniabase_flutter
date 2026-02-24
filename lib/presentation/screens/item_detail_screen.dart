@@ -15,7 +15,6 @@ class ItemDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (itemData == null) {
-      // Typically, we would fetch from Cubit here if accessed directly by URL
       return const Scaffold(
         body: Center(child: Text('Item not found or loading...')),
       );
@@ -41,7 +40,6 @@ class _ItemDetailView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Actions: Back, Edit, Delete
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -101,7 +99,6 @@ class _ItemDetailView extends StatelessWidget {
             ),
             const SizedBox(height: 32),
 
-            // Two-column layout (stacks on mobile implicitly below if we used Wrap/etc., but we'll use a responsive builder or just column for simplicity, let's use LayoutBuilder)
             LayoutBuilder(
               builder: (context, constraints) {
                 if (constraints.maxWidth > 800) {
@@ -138,7 +135,7 @@ class _ItemDetailView extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       decoration: CyberpunkStyling.getVolumeDecoration(
         context,
-        bgColor: const Color(0xFF18181B), // zinc-900
+        bgColor: const Color(0xFF18181B),
       ),
       child: AspectRatio(
         aspectRatio: 2 / 3,
@@ -173,13 +170,10 @@ class _ItemDetailView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Category Badge
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           decoration: BoxDecoration(
-            color: theme.colorScheme.secondary.withValues(
-              alpha: 0.2,
-            ), // Magenta tint
+            color: theme.colorScheme.secondary.withValues(alpha: 0.2),
             border: Border(
               left: BorderSide(color: theme.colorScheme.secondary, width: 2),
             ),
@@ -195,7 +189,6 @@ class _ItemDetailView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        // Title
         ShaderMask(
           shaderCallback: (bounds) => const LinearGradient(
             colors: [Color(0xFFFF00FF), Color(0xFFFFFF00)],
@@ -213,7 +206,6 @@ class _ItemDetailView extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        // Author
         Text.rich(
           TextSpan(
             text: 'BY ',
@@ -231,7 +223,6 @@ class _ItemDetailView extends StatelessWidget {
         ),
         const SizedBox(height: 32),
 
-        // Description
         Text(
           item.description.value,
           style: const TextStyle(
@@ -242,12 +233,10 @@ class _ItemDetailView extends StatelessWidget {
         ),
         const SizedBox(height: 32),
 
-        // Mark Completed Button
         SizedBox(
           width: double.infinity,
           child: OutlinedButton(
             onPressed: () {
-              // Stub for WriteService toggle
               print('Toggled complete status for ${item.title.value}');
             },
             style: OutlinedButton.styleFrom(
@@ -278,7 +267,6 @@ class _ItemDetailView extends StatelessWidget {
         ),
         const SizedBox(height: 32),
 
-        // Details Grid
         Container(
           padding: const EdgeInsets.only(top: 24),
           decoration: BoxDecoration(
@@ -290,7 +278,7 @@ class _ItemDetailView extends StatelessWidget {
             crossAxisCount: 2,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            childAspectRatio: 3, // Gives adequate width vs height
+            childAspectRatio: 3,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
             children: [
@@ -324,7 +312,6 @@ class _ItemDetailView extends StatelessWidget {
         ),
         const SizedBox(height: 32),
 
-        // Tags
         if (item.tags.isNotEmpty) ...[
           const Text(
             'TAGS',
@@ -421,7 +408,7 @@ class _ItemDetailView extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
-          backgroundColor: const Color(0xFF18181B), // zinc-900
+          backgroundColor: const Color(0xFF18181B),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
@@ -452,10 +439,6 @@ class _ItemDetailView extends StatelessWidget {
               onPressed: () async {
                 Navigator.of(dialogContext).pop();
 
-                // Use a local loading dialog or just context.go with snackbar
-                // Since ItemsWriteService controls a cubit, we should ideally wrap the page
-                // in a BlocListener, but for simplicity here we just await the service directly.
-                // Normally we'd dispatch to cubit and listen for success.
                 try {
                   await sl<IItemsWriteService>().deleteItem(item);
                   if (context.mounted) {
