@@ -7,7 +7,7 @@ import '../../config/injection.dart';
 import '../../application/services/items_write_service.dart';
 import '../../application/services/items_write_cubit.dart';
 import '../../application/services/items_write_state.dart';
-import '../../application/services/items_read_service.dart';
+import '../../application/services/items_cubit.dart';
 import '../widgets/cyberpunk_styling.dart';
 import '../widgets/cyberpunk_fab.dart';
 import '../widgets/main_drawer.dart';
@@ -44,6 +44,14 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
     super.initState();
     _scrollController = ScrollController();
     currentItem = widget.item;
+    sl<ItemsCubit>().retain();
+  }
+
+  @override
+  void dispose() {
+    sl<ItemsCubit>().release();
+    _scrollController.dispose();
+    super.dispose();
   }
 
   void _toggleCompleted() {
@@ -56,10 +64,6 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
     setState(() {
       currentItem = updatedItem;
     });
-
-    sl<IItemsReadService>().fetchAllItems(refresh: true);
-    sl<IItemsReadService>().fetchLatestItems();
-    sl<IItemsReadService>().fetchStats();
   }
 
   @override

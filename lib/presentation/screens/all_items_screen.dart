@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/services/items_cubit.dart';
 import '../../application/services/items_state.dart';
-import '../../application/services/items_read_service.dart';
 import '../../config/injection.dart';
 import '../widgets/item_preview_widget.dart';
 import '../widgets/main_drawer.dart';
@@ -33,25 +32,12 @@ class _AllItemsViewState extends State<_AllItemsView> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
-    sl<IItemsReadService>().fetchAllItems(refresh: true);
-  }
-
-  void _onScroll() {
-    if (_isBottom) {
-      sl<IItemsReadService>().fetchAllItems();
-    }
-  }
-
-  bool get _isBottom {
-    if (!_scrollController.hasClients) return false;
-    final maxScroll = _scrollController.position.maxScrollExtent;
-    final currentScroll = _scrollController.offset;
-    return currentScroll >= (maxScroll * 0.9);
+    sl<ItemsCubit>().retain();
   }
 
   @override
   void dispose() {
+    sl<ItemsCubit>().release();
     _scrollController.dispose();
     super.dispose();
   }

@@ -5,7 +5,20 @@ import 'items_state.dart';
 import '../../domain/entities/item.dart';
 
 class ItemsCubit extends Cubit<ItemsState> {
-  ItemsCubit() : super(const ItemsState());
+  final void Function() onRetain;
+  final void Function() onRelease;
+
+  ItemsCubit({required this.onRetain, required this.onRelease})
+    : super(const ItemsState());
+
+  void retain() {
+    onRetain();
+  }
+
+  void release() {
+    onRelease();
+  }
+
   void emitLoading() {
     emit(state.copyWith(status: ItemsStatus.loading));
   }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/services/items_cubit.dart';
 import '../../application/services/items_state.dart';
 import '../../application/services/items_read_service.dart';
+
 import '../../config/injection.dart';
 import '../widgets/item_preview_widget.dart';
 import '../widgets/main_drawer.dart';
@@ -35,11 +36,13 @@ class _SearchViewState extends State<_SearchView> {
   @override
   void initState() {
     super.initState();
+    sl<ItemsCubit>().retain();
     sl<IItemsReadService>().searchItems('');
   }
 
   @override
   void dispose() {
+    sl<ItemsCubit>().release();
     _scrollController.dispose();
     _searchController.dispose();
     _focusNode.dispose();

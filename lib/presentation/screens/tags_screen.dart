@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../application/services/items_cubit.dart';
 import '../../application/services/items_state.dart';
-import '../../application/services/items_read_service.dart';
+
 import '../../config/injection.dart';
 import '../widgets/dynamic_list_layout.dart';
 import '../widgets/main_drawer.dart';
@@ -37,11 +37,12 @@ class _TagsViewState extends State<_TagsView> {
   void initState() {
     super.initState();
     _selectedTag = widget.initialTag?.toLowerCase();
-    sl<IItemsReadService>().fetchAllItems();
+    sl<ItemsCubit>().retain();
   }
 
   @override
   void dispose() {
+    sl<ItemsCubit>().release();
     _scrollController.dispose();
     super.dispose();
   }

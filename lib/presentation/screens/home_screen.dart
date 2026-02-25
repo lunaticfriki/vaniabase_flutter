@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../application/services/items_cubit.dart';
 import '../../application/services/items_state.dart';
-import '../../application/services/items_read_service.dart';
+
 import '../../config/injection.dart';
 import '../widgets/item_preview_widget.dart';
 import '../widgets/cyberpunk_styling.dart';
@@ -36,18 +36,12 @@ class _HomeViewState extends State<_HomeView> {
   @override
   void initState() {
     super.initState();
-    final readService = sl<IItemsReadService>();
-    readService.fetchLatestItems();
-    readService.fetchCategories();
-    readService.fetchAuthors();
-    readService.fetchTopics();
-    readService.fetchTags();
-    readService.fetchPublishers();
-    readService.fetchStats();
+    sl<ItemsCubit>().retain();
   }
 
   @override
   void dispose() {
+    sl<ItemsCubit>().release();
     _scrollController.dispose();
     super.dispose();
   }

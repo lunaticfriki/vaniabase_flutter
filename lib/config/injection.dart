@@ -20,7 +20,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  sl.registerLazySingleton<ItemsCubit>(() => ItemsCubit());
+  sl.registerLazySingleton<ItemsCubit>(
+    () => ItemsCubit(
+      onRetain: () => sl<IItemsReadService>().retain(),
+      onRelease: () => sl<IItemsReadService>().release(),
+    ),
+  );
   sl.registerLazySingleton<IItemsReadService>(
     () => ItemsReadService(sl(), sl()),
   );
