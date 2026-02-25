@@ -1,6 +1,9 @@
+import 'dart:async';
 import '../../domain/repositories/i_items_repository.dart';
+import '../../domain/entities/item_failure.dart';
+import '../../domain/entities/category.dart';
+import '../../domain/value_objects/string_value_objects.dart';
 import 'items_cubit.dart';
-import 'items_state.dart';
 import '../../domain/entities/item.dart';
 
 abstract class IItemsReadService {
@@ -18,140 +21,110 @@ abstract class IItemsReadService {
 class ItemsReadService implements IItemsReadService {
   final IItemsRepository _repository;
   final ItemsCubit _cubit;
-  final int _limit = 10;
+  StreamSubscription<(ItemFailure?, List<Item>?)>? _subscription;
+  ItemsReadService(this._repository, this._cubit) {
+    _initStream();
+  }
+  void _initStream() {
+    _subscription?.cancel();
+    _cubit.emitLoading();
+    _subscription = _repository.watchAllItems().listen((result) {
+      final failure = result.$1;
+      final items = result.$2 ?? [];
+      if (failure != null) {
+        _cubit.emitError(failure.message);
+        return;
+      }
+      _cubit.updateItems(items, hasReachedMax: true);
+      final latestItems = items.take(5).toList();
+      _cubit.updateLatestItems(latestItems);
+      final categoryMap = <String, Category>{};
+      for (var item in items) {
+        final catName = item.category.name.value.toLowerCase();
+        if (catName.isNotEmpty && catName != 'unknown') {
+          if (!categoryMap.containsKey(catName)) {
+            categoryMap[catName] = item.category;
+          }
+        }
+      }
+      final sortedCategories = categoryMap.values.toList()
+        ..sort((a, b) => a.name.value.compareTo(b.name.value));
+      _cubit.updateCategories(sortedCategories);
+      final authorMap = <String, Author>{};
+      for (var item in items) {
+        final authorStr = item.author.value;
+        if (!authorMap.containsKey(authorStr)) {
+          authorMap[authorStr] = item.author;
+        }
+      }
+      _cubit.updateAuthors(authorMap.values.toList());
+      final topicMap = <String, Topic>{};
+      for (var item in items) {
+        final topicStr = item.topic.value;
+        if (!topicMap.containsKey(topicStr)) {
+          topicMap[topicStr] = item.topic;
+        }
+      }
+      _cubit.updateTopics(topicMap.values.toList());
+      final tagsSet = <String>{};
+      for (var item in items) {
+        tagsSet.addAll(item.tags);
+      }
+      _cubit.updateTags(tagsSet.toList());
+      final publisherSet = <String>{};
+      for (var item in items) {
+        final pubStr = item.publisher.value;
+        if (pubStr.isNotEmpty && pubStr.toLowerCase() != 'unknown') {
+          publisherSet.add(pubStr);
+        }
+      }
+      final sortedPublishers = publisherSet.toList()..sort();
+      _cubit.updatePublishers(sortedPublishers);
+      final completed = items.where((i) => i.completed.value).length;
+      _cubit.updateStats(items.length, completed);
+    });
+  }
 
-  ItemsReadService(this._repository, this._cubit);
+  void dispose() {
+    _subscription?.cancel();
+  }
 
   @override
   Future<void> fetchAllItems({bool refresh = false}) async {
-    final currentState = _cubit.state;
-    if (currentState.status == ItemsStatus.loading && !refresh) return;
-
-    int offset = 0;
-    List<Item> currentItems = [];
-
-    if (!refresh && currentState.status == ItemsStatus.success) {
-      if (currentState.hasReachedMax) return;
-      currentItems = currentState.items;
-      offset = currentItems.length;
-    } else {
-      _cubit.emitLoading();
-    }
-
-    final (failure, newItems) = await _repository.getItems(
-      limit: _limit,
-      offset: offset,
-    );
-
-    if (failure != null) {
-      _cubit.emitError(failure.message);
-    } else if (newItems != null) {
-      final hasReachedMax = newItems.isEmpty || newItems.length < _limit;
-      _cubit.updateItems(
-        refresh ? newItems : (List.of(currentItems)..addAll(newItems)),
-        hasReachedMax: hasReachedMax,
-      );
-    } else {
-      _cubit.emitError('Unknown error occurred');
+    if (refresh) {
+      _initStream();
     }
   }
 
   @override
-  Future<void> fetchLatestItems() async {
-    _cubit.emitLoading();
-    final (failure, items) = await _repository.getLatestItems(5);
-
-    if (failure != null) {
-      _cubit.emitError(failure.message);
-    } else if (items != null) {
-      _cubit.updateLatestItems(items);
-    } else {
-      _cubit.emitError('Unknown error occurred');
-    }
-  }
-
+  Future<void> fetchLatestItems() async {}
   @override
   Future<void> searchItems(String query) async {
+    final currentState = _cubit.state;
+    final allItems = currentState.items;
     if (query.isEmpty) {
       _cubit.updateSearchResults([]);
       return;
     }
-
-    _cubit.emitLoading();
-    final (failure, items) = await _repository.searchItems(query);
-
-    if (failure != null) {
-      _cubit.emitError(failure.message);
-    } else if (items != null) {
-      _cubit.updateSearchResults(items);
-    } else {
-      _cubit.emitError('Unknown error occurred');
-    }
+    final lowercaseQuery = query.toLowerCase();
+    final searchResults = allItems.where((item) {
+      return item.title.value.toLowerCase().contains(lowercaseQuery) ||
+          item.author.value.toLowerCase().contains(lowercaseQuery) ||
+          item.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery));
+    }).toList();
+    _cubit.updateSearchResults(searchResults);
   }
 
   @override
-  Future<void> fetchCategories() async {
-    _cubit.emitLoading();
-    final (failure, items) = await _repository.getCategories();
-    if (failure != null) {
-      _cubit.emitError(failure.message);
-    } else {
-      _cubit.updateCategories(items ?? []);
-    }
-  }
-
+  Future<void> fetchCategories() async {}
   @override
-  Future<void> fetchAuthors() async {
-    _cubit.emitLoading();
-    final (failure, items) = await _repository.getAuthors();
-    if (failure != null) {
-      _cubit.emitError(failure.message);
-    } else {
-      _cubit.updateAuthors(items ?? []);
-    }
-  }
-
+  Future<void> fetchAuthors() async {}
   @override
-  Future<void> fetchTopics() async {
-    _cubit.emitLoading();
-    final (failure, items) = await _repository.getTopics();
-    if (failure != null) {
-      _cubit.emitError(failure.message);
-    } else {
-      _cubit.updateTopics(items ?? []);
-    }
-  }
-
+  Future<void> fetchTopics() async {}
   @override
-  Future<void> fetchTags() async {
-    _cubit.emitLoading();
-    final (failure, items) = await _repository.getTags();
-    if (failure != null) {
-      _cubit.emitError(failure.message);
-    } else {
-      _cubit.updateTags(items ?? []);
-    }
-  }
-
+  Future<void> fetchTags() async {}
   @override
-  Future<void> fetchPublishers() async {
-    _cubit.emitLoading();
-    final (failure, items) = await _repository.getPublishers();
-    if (failure != null) {
-      _cubit.emitError(failure.message);
-    } else {
-      _cubit.updatePublishers(items ?? []);
-    }
-  }
-
+  Future<void> fetchPublishers() async {}
   @override
-  Future<void> fetchStats() async {
-    _cubit.emitLoading();
-    final (failure, total, completed) = await _repository.getStats();
-    if (failure != null) {
-      _cubit.emitError(failure.message);
-    } else {
-      _cubit.updateStats(total, completed);
-    }
-  }
+  Future<void> fetchStats() async {}
 }

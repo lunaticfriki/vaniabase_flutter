@@ -10,6 +10,5 @@ class ItemsWriteSuccess extends ItemsWriteState {}
 
 class ItemsWriteFailure extends ItemsWriteState {
   final String errorMessage;
-
   const ItemsWriteFailure(this.errorMessage);
 }

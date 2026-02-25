@@ -21,7 +21,6 @@ class Item {
   final Completed completed;
   final UniqueId ownerId;
   final DateTime? createdAt;
-
   const Item._({
     required this.id,
     required this.title,
@@ -40,7 +39,6 @@ class Item {
     required this.ownerId,
     this.createdAt,
   });
-
   static Item create({
     required Title title,
     required Author author,
@@ -84,7 +82,6 @@ class Item {
       final categoryData = json['category'];
       String categoryId = 'unknown-id';
       String categoryName = 'Unknown';
-
       if (categoryData is Map) {
         categoryId = (categoryData['id']?.toString() ?? 'unknown-id').trim();
         categoryName = (categoryData['name']?.toString() ?? 'Unknown').trim();
@@ -92,7 +89,6 @@ class Item {
         categoryId = categoryData.trim();
         categoryName = categoryData.trim();
       }
-
       return Item.create(
         id: UniqueId.fromUniqueString((json['id']?.toString() ?? '').trim()),
         title: Title((json['title']?.toString() ?? '').trim()),

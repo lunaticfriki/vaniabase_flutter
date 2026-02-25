@@ -8,8 +8,23 @@ import '../data_sources/seed_items_data_source.dart';
 
 class ItemsRepositoryImpl implements IItemsRepository {
   final IItemsDataSource _dataSource;
-
   ItemsRepositoryImpl(this._dataSource);
+  @override
+  Stream<(ItemFailure?, List<Item>?)> watchAllItems() {
+    return _dataSource.watchItems().map((rawData) {
+      try {
+        final items = rawData.map((e) => Item.fromJson(e)).toList();
+        final sortedItems = items.reversed.toList();
+        sortedItems.sort(
+          (a, b) => (b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
+              .compareTo(a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)),
+        );
+        return (null, sortedItems);
+      } catch (e) {
+        return (ItemUnexpectedFailure(e.toString()), null);
+      }
+    });
+  }
 
   @override
   Future<(ItemFailure?, List<Item>?)> getAllItems() async {
@@ -74,7 +89,6 @@ class ItemsRepositoryImpl implements IItemsRepository {
         (a, b) => (b.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0))
             .compareTo(a.createdAt ?? DateTime.fromMillisecondsSinceEpoch(0)),
       );
-
       final lowercaseQuery = query.toLowerCase();
       final searchResults = sortedItems.where((item) {
         return item.title.value.toLowerCase().contains(lowercaseQuery) ||
@@ -92,21 +106,16 @@ class ItemsRepositoryImpl implements IItemsRepository {
     try {
       final rawData = await _dataSource.fetchItems();
       final items = rawData.map((e) => Item.fromJson(e)).toList();
-
       final categoryMap = <String, Category>{};
       for (var item in items) {
         final catName = item.category.name.value.toLowerCase();
-
         if (catName.isEmpty || catName == 'unknown') continue;
-
         if (!categoryMap.containsKey(catName)) {
           categoryMap[catName] = item.category;
         }
       }
-
       final sortedCategories = categoryMap.values.toList()
         ..sort((a, b) => a.name.value.compareTo(b.name.value));
-
       return (null, sortedCategories);
     } catch (e) {
       return (ItemUnexpectedFailure(e.toString()), null);
@@ -118,7 +127,6 @@ class ItemsRepositoryImpl implements IItemsRepository {
     try {
       final rawData = await _dataSource.fetchItems();
       final items = rawData.map((e) => Item.fromJson(e)).toList();
-
       final authorMap = <String, Author>{};
       for (var item in items) {
         final authorStr = item.author.value;
@@ -137,7 +145,6 @@ class ItemsRepositoryImpl implements IItemsRepository {
     try {
       final rawData = await _dataSource.fetchItems();
       final items = rawData.map((e) => Item.fromJson(e)).toList();
-
       final topicMap = <String, Topic>{};
       for (var item in items) {
         final topicStr = item.topic.value;
@@ -156,7 +163,6 @@ class ItemsRepositoryImpl implements IItemsRepository {
     try {
       final rawData = await _dataSource.fetchItems();
       final items = rawData.map((e) => Item.fromJson(e)).toList();
-
       final tagsSet = <String>{};
       for (var item in items) {
         tagsSet.addAll(item.tags);
@@ -172,7 +178,6 @@ class ItemsRepositoryImpl implements IItemsRepository {
     try {
       final rawData = await _dataSource.fetchItems();
       final items = rawData.map((e) => Item.fromJson(e)).toList();
-
       final publisherSet = <String>{};
       for (var item in items) {
         final pubStr = item.publisher.value;
@@ -191,7 +196,6 @@ class ItemsRepositoryImpl implements IItemsRepository {
     try {
       final rawData = await _dataSource.fetchItems();
       final items = rawData.map((e) => Item.fromJson(e)).toList();
-
       final total = items.length;
       final completed = items.where((i) => i.completed.value).length;
       return (null, total, completed);
@@ -224,7 +228,6 @@ class ItemsRepositoryImpl implements IItemsRepository {
         'owner': item.ownerId.value,
         'created_at': (item.createdAt ?? DateTime.now()).millisecondsSinceEpoch,
       };
-
       await _dataSource.createItem(map);
       return null;
     } catch (e) {
@@ -256,9 +259,7 @@ class ItemsRepositoryImpl implements IItemsRepository {
         'owner': item.ownerId.value,
         'created_at': item.createdAt?.millisecondsSinceEpoch,
       };
-
       map.removeWhere((key, value) => value == null);
-
       await _dataSource.updateItem(map);
       return null;
     } catch (e) {

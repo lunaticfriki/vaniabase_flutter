@@ -4,9 +4,7 @@ import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final IAuthRepository _authRepository;
-
   AuthCubit(this._authRepository) : super(AuthInitial());
-
   Future<void> checkAuthStatus() async {
     emit(AuthLoading());
     final user = await _authRepository.getSignedInUser();

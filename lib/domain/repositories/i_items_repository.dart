@@ -5,6 +5,7 @@ import '../value_objects/string_value_objects.dart';
 import '../value_objects/unique_id.dart';
 
 abstract class IItemsRepository {
+  Stream<(ItemFailure?, List<Item>?)> watchAllItems();
   Future<(ItemFailure?, List<Item>?)> getAllItems();
   Future<(ItemFailure?, List<Item>?)> getItems({
     int limit = 10,

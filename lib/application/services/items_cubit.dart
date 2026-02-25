@@ -6,7 +6,6 @@ import '../../domain/entities/item.dart';
 
 class ItemsCubit extends Cubit<ItemsState> {
   ItemsCubit() : super(const ItemsState());
-
   void emitLoading() {
     emit(state.copyWith(status: ItemsStatus.loading));
   }

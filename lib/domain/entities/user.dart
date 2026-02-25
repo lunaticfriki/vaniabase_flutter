@@ -8,7 +8,6 @@ class User extends Equatable {
   final String name;
   final String avatar;
   final DateTime createdAt;
-
   const User._({
     required this.id,
     required this.emailAddress,
@@ -16,7 +15,6 @@ class User extends Equatable {
     required this.avatar,
     required this.createdAt,
   });
-
   static User create({
     required UniqueId id,
     required EmailAddress emailAddress,
@@ -57,7 +55,7 @@ class UserObjectMother {
       id: UniqueId.fromUniqueString('user-123'),
       emailAddress: EmailAddress('user@example.com'),
       name: 'Test User',
-      avatar: 'https://example.com/avatar.jpg',
+      avatar: 'https://example.com/avatar.png',
       createdAt: DateTime(2023, 1, 1),
     );
   }

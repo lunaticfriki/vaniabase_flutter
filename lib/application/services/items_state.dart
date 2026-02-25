@@ -19,7 +19,6 @@ class ItemsState extends Equatable {
   final int completedItems;
   final String? errorMessage;
   final bool hasReachedMax;
-
   const ItemsState({
     this.status = ItemsStatus.initial,
     this.items = const [],
@@ -35,7 +34,6 @@ class ItemsState extends Equatable {
     this.errorMessage,
     this.hasReachedMax = false,
   });
-
   ItemsState copyWith({
     ItemsStatus? status,
     List<Item>? items,

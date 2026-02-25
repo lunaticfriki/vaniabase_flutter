@@ -12,13 +12,11 @@ class FirebaseAuthRepositoryImpl implements IAuthRepository {
   final firebase.FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
   late final GoogleSignIn _googleSignIn;
-
   FirebaseAuthRepositoryImpl(this._firebaseAuth, this._firestore) {
     _googleSignIn = GoogleSignIn(
       clientId: kIsWeb ? dotenv.env['GOOGLE_SIGN_IN_WEB_CLIENT_ID'] : null,
     );
   }
-
   @override
   Future<User?> getSignedInUser() async {
     final firebaseUser = _firebaseAuth.currentUser;
@@ -35,21 +33,17 @@ class FirebaseAuthRepositoryImpl implements IAuthRepository {
       if (googleUser == null) {
         throw Exception('Google sign in was cancelled');
       }
-
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-
       final firebase.AuthCredential credential =
           firebase.GoogleAuthProvider.credential(
             accessToken: googleAuth.accessToken,
             idToken: googleAuth.idToken,
           );
-
       final userCredential = await _firebaseAuth.signInWithCredential(
         credential,
       );
       final firebaseUser = userCredential.user;
-
       if (firebaseUser != null) {
         try {
           final userDoc = await _firestore
@@ -89,14 +83,12 @@ class FirebaseAuthRepositoryImpl implements IAuthRepository {
     String name = 'Unknown';
     String avatar = '';
     DateTime createdAt = DateTime.now();
-
     try {
       final userDoc = await _firestore.collection('users').doc(user.uid).get();
       if (userDoc.exists) {
         final data = userDoc.data()!;
         name = data['name'] ?? name;
         avatar = data['avatar'] ?? avatar;
-
         final createdAtRaw = data['created_at'];
         if (createdAtRaw != null) {
           if (createdAtRaw is Timestamp) {
@@ -109,7 +101,6 @@ class FirebaseAuthRepositoryImpl implements IAuthRepository {
     } catch (e) {
       debugPrint('Error parsing user data from Firestore: \$e');
     }
-
     return User.create(
       id: UniqueId.fromUniqueString(user.uid),
       emailAddress: EmailAddress(user.email ?? ''),
