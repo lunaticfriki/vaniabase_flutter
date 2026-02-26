@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../domain/entities/item.dart';
 import 'item_preview_widget.dart';
 import 'cyberpunk_styling.dart';
@@ -26,21 +27,50 @@ class DynamicListLayout extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [Color(0xFFFF00FF), Color(0xFFFFFF00)],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ).createShader(bounds),
-          child: Text(
-            title.toUpperCase(),
-            style: Theme.of(context).textTheme.displayLarge?.copyWith(
-              fontWeight: FontWeight.w900,
-              color: Colors.white,
-              height: 1.1,
-              letterSpacing: -2.0,
+        const SizedBox(height: 32),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              decoration: CyberpunkStyling.getVolumeDecoration(
+                context,
+                bgColor: Colors.black.withValues(alpha: 0.5),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  if (GoRouter.of(context).canPop()) {
+                    GoRouter.of(context).pop();
+                  } else {
+                    GoRouter.of(context).go('/');
+                  }
+                },
+              ),
             ),
-          ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    colors: [Color(0xFFFF00FF), Color(0xFFFFFF00)],
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ).createShader(bounds),
+                  child: Text(
+                    title.toUpperCase(),
+                    textAlign: TextAlign.right,
+                    style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      height: 1.1,
+                      letterSpacing: -2.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 32),
 
@@ -85,7 +115,7 @@ class DynamicListLayout extends StatelessWidget {
         : optionCounts.values.reduce((a, b) => a < b ? a : b);
 
     return Container(
-      constraints: const BoxConstraints(minHeight: 500),
+      width: double.infinity,
       decoration: CyberpunkStyling.getVolumeDecoration(
         context,
         bgColor: const Color(0xFF18181B),

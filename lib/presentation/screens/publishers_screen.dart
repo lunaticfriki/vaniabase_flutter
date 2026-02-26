@@ -50,7 +50,6 @@ class _PublishersViewState extends State<_PublishersView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Publishers')),
       drawer: const MainDrawer(),
       floatingActionButton: CyberpunkFab(scrollController: _scrollController),
       body: BlocBuilder<ItemsCubit, ItemsState>(

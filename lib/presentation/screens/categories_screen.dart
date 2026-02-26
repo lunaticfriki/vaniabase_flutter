@@ -50,7 +50,6 @@ class _CategoriesViewState extends State<_CategoriesView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Categories')),
       drawer: const MainDrawer(),
       floatingActionButton: CyberpunkFab(scrollController: _scrollController),
       body: BlocBuilder<ItemsCubit, ItemsState>(

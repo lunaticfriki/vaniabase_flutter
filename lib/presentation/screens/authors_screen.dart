@@ -50,7 +50,6 @@ class _AuthorsViewState extends State<_AuthorsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Authors')),
       drawer: const MainDrawer(),
       floatingActionButton: CyberpunkFab(scrollController: _scrollController),
       body: BlocBuilder<ItemsCubit, ItemsState>(

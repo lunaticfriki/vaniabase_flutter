@@ -50,7 +50,6 @@ class _TagsViewState extends State<_TagsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tags')),
       drawer: const MainDrawer(),
       floatingActionButton: CyberpunkFab(scrollController: _scrollController),
       body: BlocBuilder<ItemsCubit, ItemsState>(

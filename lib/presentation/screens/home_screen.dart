@@ -134,38 +134,74 @@ class _HomeViewState extends State<_HomeView> {
   Widget _buildStatsSection(BuildContext context, ItemsState state) {
     final theme = Theme.of(context);
 
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      children: [
-        _buildStatCard(context, 'TOTAL', state.totalItems, Colors.white),
-        _buildStatCard(
-          context,
-          'COMPLETED',
-          state.completedItems,
-          Colors.greenAccent,
-        ),
-        _buildStatCard(
-          context,
-          'CATEGORIES',
-          state.categories.length,
-          theme.colorScheme.secondary,
-        ),
-        _buildStatCard(context, 'AUTHORS', state.authors.length, Colors.orange),
-        _buildStatCard(
-          context,
-          'EDITORS',
-          state.publishers.length,
-          Colors.pinkAccent,
-        ),
-        _buildStatCard(
-          context,
-          'TOPICS',
-          state.topics.length,
-          Colors.purpleAccent,
-        ),
-        _buildStatCard(context, 'TAGS', state.tags.length, Colors.cyan),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        int crossAxisCount = constraints.maxWidth > 800
+            ? 4
+            : constraints.maxWidth > 600
+            ? 3
+            : 2;
+        double cardWidth =
+            (constraints.maxWidth - ((crossAxisCount - 1) * 16)) /
+                crossAxisCount -
+            0.01; // Subtract 0.01 to prevent fractional wrapping issues
+
+        return Wrap(
+          spacing: 16,
+          runSpacing: 16,
+          children: [
+            _buildStatCard(
+              context,
+              'TOTAL',
+              state.totalItems,
+              Colors.white,
+              cardWidth,
+            ),
+            _buildStatCard(
+              context,
+              'COMPLETED',
+              state.completedItems,
+              Colors.greenAccent,
+              cardWidth,
+            ),
+            _buildStatCard(
+              context,
+              'CATEGORIES',
+              state.categories.length,
+              theme.colorScheme.secondary,
+              cardWidth,
+            ),
+            _buildStatCard(
+              context,
+              'AUTHORS',
+              state.authors.length,
+              Colors.orange,
+              cardWidth,
+            ),
+            _buildStatCard(
+              context,
+              'EDITORS',
+              state.publishers.length,
+              Colors.pinkAccent,
+              cardWidth,
+            ),
+            _buildStatCard(
+              context,
+              'TOPICS',
+              state.topics.length,
+              Colors.purpleAccent,
+              cardWidth,
+            ),
+            _buildStatCard(
+              context,
+              'TAGS',
+              state.tags.length,
+              Colors.cyan,
+              cardWidth,
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -174,9 +210,10 @@ class _HomeViewState extends State<_HomeView> {
     String label,
     int value,
     Color color,
+    double width,
   ) {
     return Container(
-      width: 140,
+      width: width,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),

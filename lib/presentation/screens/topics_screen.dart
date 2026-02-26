@@ -50,7 +50,6 @@ class _TopicsViewState extends State<_TopicsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Topics')),
       drawer: const MainDrawer(),
       floatingActionButton: CyberpunkFab(scrollController: _scrollController),
       body: BlocBuilder<ItemsCubit, ItemsState>(

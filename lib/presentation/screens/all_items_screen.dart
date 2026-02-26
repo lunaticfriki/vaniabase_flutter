@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../application/services/items_cubit.dart';
 import '../../application/services/items_state.dart';
 import '../../config/injection.dart';
 import '../widgets/item_preview_widget.dart';
 import '../widgets/main_drawer.dart';
 import '../widgets/cyberpunk_fab.dart';
+import '../widgets/cyberpunk_styling.dart';
 
 class AllItemsScreen extends StatelessWidget {
   const AllItemsScreen({super.key});
@@ -45,7 +47,6 @@ class _AllItemsViewState extends State<_AllItemsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('All Items')),
       drawer: const MainDrawer(),
       floatingActionButton: CyberpunkFab(scrollController: _scrollController),
       body: BlocBuilder<ItemsCubit, ItemsState>(
@@ -68,29 +69,92 @@ class _AllItemsViewState extends State<_AllItemsView> {
                     ? 4
                     : 2;
 
-                return GridView.builder(
+                return SingleChildScrollView(
                   controller: _scrollController,
-                  padding: const EdgeInsets.all(16.0),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: crossAxisCount,
-                    childAspectRatio: 0.46,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                  ),
-                  itemCount: state.hasReachedMax
-                      ? state.items.length
-                      : state.items.length + 1,
-                  itemBuilder: (context, index) {
-                    if (index >= state.items.length) {
-                      return const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircularProgressIndicator(),
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 32),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            decoration: CyberpunkStyling.getVolumeDecoration(
+                              context,
+                              bgColor: Colors.black.withValues(alpha: 0.5),
+                            ),
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                if (GoRouter.of(context).canPop()) {
+                                  GoRouter.of(context).pop();
+                                } else {
+                                  GoRouter.of(context).go('/');
+                                }
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: ShaderMask(
+                                shaderCallback: (bounds) =>
+                                    const LinearGradient(
+                                      colors: [
+                                        Color(0xFFFF00FF),
+                                        Color(0xFFFFFF00),
+                                      ],
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                    ).createShader(bounds),
+                                child: Text(
+                                  'ALL ITEMS',
+                                  textAlign: TextAlign.right,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayLarge
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.white,
+                                        height: 1.1,
+                                        letterSpacing: -2.0,
+                                      ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 32),
+                      GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: crossAxisCount,
+                          childAspectRatio: 0.46,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
                         ),
-                      );
-                    }
-                    return ItemPreviewWidget(item: state.items[index]);
-                  },
+                        itemCount: state.hasReachedMax
+                            ? state.items.length
+                            : state.items.length + 1,
+                        itemBuilder: (context, index) {
+                          if (index >= state.items.length) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: CircularProgressIndicator(),
+                              ),
+                            );
+                          }
+                          return ItemPreviewWidget(item: state.items[index]);
+                        },
+                      ),
+                    ],
+                  ),
                 );
               },
             ),
