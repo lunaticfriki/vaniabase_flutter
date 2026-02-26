@@ -159,6 +159,22 @@ class MainDrawer extends StatelessWidget {
                   ),
                   _buildDrawerItem(
                     context,
+                    const Icon(Icons.business), // publisher icon
+                    'Publishers',
+                    '/publishers',
+                    tileColor,
+                    textColor,
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    const Icon(Icons.check_circle_outline), // completed icon
+                    'Completed',
+                    '/completed',
+                    tileColor,
+                    textColor,
+                  ),
+                  _buildDrawerItem(
+                    context,
                     PixelIcons.about,
                     'About',
                     '/about',

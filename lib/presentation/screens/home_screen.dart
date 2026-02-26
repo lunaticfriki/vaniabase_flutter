@@ -321,7 +321,7 @@ class _HomeViewState extends State<_HomeView> {
               ? publishersList
               : state.publishers.map((p) => MapEntry(p, p)).toList(),
           Colors.pinkAccent,
-          '/',
+          '/publishers',
         ),
         const SizedBox(height: 16),
         _buildListRow(
@@ -331,7 +331,7 @@ class _HomeViewState extends State<_HomeView> {
               ? last5CompletedNames
               : [const MapEntry('No items completed', 'No items completed')],
           Colors.greenAccent,
-          '/',
+          '/completed',
         ),
       ],
     );

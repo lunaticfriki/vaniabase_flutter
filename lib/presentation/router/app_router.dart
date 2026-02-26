@@ -16,6 +16,8 @@ import '../screens/login_screen.dart';
 import '../screens/item_detail_screen.dart';
 import '../screens/new_item_screen.dart';
 import '../screens/edit_item_screen.dart';
+import '../screens/publishers_screen.dart';
+import '../screens/completed_items_screen.dart';
 import '../../domain/entities/item.dart';
 
 class GoRouterRefreshStream extends ChangeNotifier {
@@ -59,6 +61,10 @@ class AppRouter {
         builder: (context, state) => const AllItemsScreen(),
       ),
       GoRoute(
+        path: '/completed',
+        builder: (context, state) => const CompletedItemsScreen(),
+      ),
+      GoRoute(
         path: '/search',
         builder: (context, state) => const SearchScreen(),
       ),
@@ -70,6 +76,11 @@ class AppRouter {
         path: '/categories',
         builder: (context, state) =>
             CategoriesScreen(initialCategory: state.extra as String?),
+      ),
+      GoRoute(
+        path: '/publishers',
+        builder: (context, state) =>
+            PublishersScreen(initialPublisher: state.extra as String?),
       ),
       GoRoute(
         path: '/authors',
