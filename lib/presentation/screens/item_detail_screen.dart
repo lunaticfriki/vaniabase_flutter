@@ -68,6 +68,9 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
     return BlocListener<ItemsWriteCubit, ItemsWriteState>(
       listener: (context, state) {
         if (state is ItemsWriteSuccess) {
@@ -84,59 +87,32 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(currentItem.title.value),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.edit),
-              onPressed: () {
-                GoRouter.of(context).push(
-                  '/item/${currentItem.id.value}/edit',
-                  extra: currentItem,
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.delete, color: Colors.redAccent),
-              onPressed: () => _confirmDelete(context, currentItem),
-            ),
-          ],
-        ),
         drawer: const MainDrawer(),
         floatingActionButton: CyberpunkFab(scrollController: _scrollController),
         body: SingleChildScrollView(
           controller: _scrollController,
-          padding: const EdgeInsets.all(24.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  if (constraints.maxWidth > 800) {
-                    return Row(
+              _buildHeaderImage(context, size.height * 0.5),
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (constraints.maxWidth > 800) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(child: _buildDetailsColumn(context, theme)),
+                        ],
+                      );
+                    }
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(flex: 2, child: _buildCoverColumn(context)),
-                        const SizedBox(width: 48),
-                        Expanded(
-                          flex: 3,
-                          child: _buildDetailsColumn(
-                            context,
-                            Theme.of(context),
-                          ),
-                        ),
-                      ],
+                      children: [_buildDetailsColumn(context, theme)],
                     );
-                  }
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildCoverColumn(context),
-                      const SizedBox(height: 32),
-                      _buildDetailsColumn(context, Theme.of(context)),
-                    ],
-                  );
-                },
+                  },
+                ),
               ),
             ],
           ),
@@ -145,38 +121,118 @@ class _ItemDetailViewState extends State<_ItemDetailView> {
     );
   }
 
-  Widget _buildCoverColumn(BuildContext context) {
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: CyberpunkStyling.getVolumeDecoration(
-        context,
-        bgColor: const Color(0xFF18181B),
-      ),
-      child: AspectRatio(
-        aspectRatio: 2 / 3,
-        child: currentItem.cover.value.isEmpty
-            ? Container(
-                color: Colors.black26,
-                child: const Icon(
-                  Icons.image_not_supported,
-                  color: Colors.white38,
-                  size: 64,
-                ),
-              )
-            : Image.network(
-                currentItem.cover.value,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.black26,
-                    child: const Icon(
-                      Icons.error,
-                      color: Colors.white38,
-                      size: 64,
-                    ),
-                  );
-                },
+  Widget _buildHeaderImage(BuildContext context, double height) {
+    return SizedBox(
+      height: height,
+      width: double.infinity,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background Image
+          if (currentItem.cover.value.isEmpty)
+            Container(
+              color: const Color(0xFF18181B),
+              child: const Icon(
+                Icons.image_not_supported,
+                color: Colors.white38,
+                size: 64,
               ),
+            )
+          else
+            Image.network(
+              currentItem.cover.value,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  color: const Color(0xFF18181B),
+                  child: const Icon(
+                    Icons.error,
+                    color: Colors.white38,
+                    size: 64,
+                  ),
+                );
+              },
+            ),
+
+          // Smooth gradient to fade the image into the background
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [0.4, 1.0], // Starts fading halfway down
+                  colors: [
+                    Theme.of(
+                      context,
+                    ).scaffoldBackgroundColor.withValues(alpha: 0.0),
+                    Theme.of(context).scaffoldBackgroundColor,
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          // Top Action Buttons
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 16,
+            left: 16,
+            right: 16,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Back Button
+                Container(
+                  decoration: CyberpunkStyling.getVolumeDecoration(
+                    context,
+                    bgColor: Colors.black.withValues(alpha: 0.5),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      if (GoRouter.of(context).canPop()) {
+                        GoRouter.of(context).pop();
+                      } else {
+                        GoRouter.of(context).go('/');
+                      }
+                    },
+                  ),
+                ),
+                // Edit & Delete Actions
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(right: 8),
+                      decoration: CyberpunkStyling.getVolumeDecoration(
+                        context,
+                        bgColor: Colors.black.withValues(alpha: 0.5),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.white),
+                        onPressed: () {
+                          GoRouter.of(context).push(
+                            '/item/${currentItem.id.value}/edit',
+                            extra: currentItem,
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      decoration: CyberpunkStyling.getVolumeDecoration(
+                        context,
+                        bgColor: Colors.black.withValues(alpha: 0.5),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.redAccent),
+                        onPressed: () => _confirmDelete(context, currentItem),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
