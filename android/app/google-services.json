@@ -15,11 +15,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "774636917610-k3nuc82ckrp61t5nb52f0ic9qcnsmo2s.apps.googleusercontent.com",
+          "client_id": "774636917610-tq9edpm70vrcjm42kod31csccbrvth6o.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.vaniabase",
-            "certificate_hash": "01673449a466eb55c78c89670e8e8ac0da26e087"
+            "certificate_hash": "7b79597d6afc28f2ce6e88ec51fa770e67e9e83b"
           }
         },
         {

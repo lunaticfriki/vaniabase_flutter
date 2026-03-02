@@ -67,9 +67,13 @@ class FirebaseAuthRepositoryImpl implements IAuthRepository {
     } on firebase.FirebaseAuthException catch (e) {
       throw Exception(e.message ?? 'Unknown authentication error');
     } catch (e) {
-      throw Exception(
-        'Google Sign In failed: $e. If on Web, check your Google Cloud Console "Authorized JavaScript origins" port.',
-      );
+      if (kIsWeb) {
+        throw Exception(
+          'Google Sign In failed: $e. If on Web, check your Google Cloud Console "Authorized JavaScript origins" port.',
+        );
+      } else {
+        throw Exception('Google Sign In failed: $e');
+      }
     }
   }
 
